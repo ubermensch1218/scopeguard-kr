@@ -1,6 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Roadmap
+    url: https://github.com/ubermensch1218/scopeguard-kr/blob/main/docs/roadmap.md
+    about: Check planned work before opening a new proposal.
   - name: Private or sensitive report
     url: https://github.com/ubermensch1218/scopeguard-kr/security/advisories/new
     about: Do not post private contract data or access details in public issues.
-

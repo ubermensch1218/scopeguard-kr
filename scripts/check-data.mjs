@@ -8,6 +8,7 @@ const required = [
   ".github/ISSUE_TEMPLATE/config.yml",
   ".github/ISSUE_TEMPLATE/bug_report.yml",
   ".github/ISSUE_TEMPLATE/clause_review.yml",
+  ".github/ISSUE_TEMPLATE/stakeholder_need.yml",
   ".claude/skills/sw-contract-scopeguard/SKILL.md",
   ".codex/skills/sw-contract-scopeguard/SKILL.md",
   "CONTRIBUTING.md",
@@ -64,6 +65,9 @@ const required = [
   "docs/event-schema.md",
   "docs/skill-first-plan.md",
   "docs/pr-review-checklist.md",
+  "docs/roadmap.md",
+  "docs/lawyer-participation.md",
+  "docs/stakeholder-needs.md",
 ];
 
 let ok = true;

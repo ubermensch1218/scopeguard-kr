@@ -46,7 +46,15 @@ npm run audit:publish
 - 대면회의 조항 개선
 - 리스크 룰 추가
 - HWPX 변환 파이프라인 제안
+- 변호사 리뷰를 반영한 조항 경계 개선
+- 참여자 니즈를 입력 항목이나 문서 표로 반영
 
 ## 리뷰 기준
 
 리뷰어는 [PR Review Checklist](docs/pr-review-checklist.md)를 기준으로 봅니다. 특히 계약 문구 변경 PR은 양측 효과, 줄이는 분쟁, 견적 row 연결 여부를 같이 확인합니다.
+
+## 니즈 수집
+
+로드맵은 [Roadmap](docs/roadmap.md), 변호사 참여 방식은 [Lawyer Participation](docs/lawyer-participation.md), 참여자 니즈 수집 기준은 [Stakeholder Needs Collection](docs/stakeholder-needs.md)에 있습니다.
+
+니즈 제출은 GitHub의 `Stakeholder need` 이슈 템플릿을 사용합니다. 실제 계약 정보가 아니라 반복되는 불편과 필요한 입력값을 적어야 합니다.

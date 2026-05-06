@@ -1,0 +1,80 @@
+name: Stakeholder need
+description: Share a fictional or generalized need from a buyer, supplier, lawyer, PM, designer, developer, or platform operator.
+title: "[Need]: "
+labels:
+  - stakeholder-need
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include real contract data, private project details, contact details, payment details, or access details. Use fictional or generalized patterns only.
+  - type: dropdown
+    id: stakeholder
+    attributes:
+      label: Stakeholder
+      options:
+        - Buyer
+        - Supplier
+        - Lawyer
+        - PM or planner
+        - Designer
+        - Developer or agency
+        - Platform operator
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: dispute
+    attributes:
+      label: Dispute or ambiguity to reduce
+      description: What repeated conflict should the product reduce?
+    validations:
+      required: true
+  - type: textarea
+    id: current_pain
+    attributes:
+      label: Current pain
+      description: What is hard to decide, write, or verify today?
+    validations:
+      required: true
+  - type: textarea
+    id: needed_inputs
+    attributes:
+      label: Needed inputs
+      description: What should the tool ask for?
+      placeholder: Requirement ID, estimate row, precondition, completion condition, test condition, revision count, meeting count, payment condition
+    validations:
+      required: true
+  - type: checkboxes
+    id: affected_docs
+    attributes:
+      label: Affected documents
+      options:
+        - label: Contract draft
+        - label: RFP / scope spec
+        - label: Acceptance criteria
+        - label: Revision request
+        - label: Change request
+        - label: Estimate sheet
+        - label: Payment schedule
+        - label: Design/UX appendix
+        - label: Operations handover
+  - type: textarea
+    id: buyer_supplier_effect
+    attributes:
+      label: Buyer and supplier effect
+      description: How does this make the agreement clearer for each side?
+    validations:
+      required: true
+  - type: dropdown
+    id: review_needed
+    attributes:
+      label: Review needed
+      options:
+        - Lawyer review
+        - Practitioner review
+        - Product/design review
+        - Generator implementation
+        - Not sure
+    validations:
+      required: true
