@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>scopeguard-kr</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/docx-preview@0.3.6/dist/docx-preview.min.js"
+      defer
+    ></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">SW 외주개발계약 분쟁 예방</p>
+        <h1>scopeguard-kr</h1>
+        <p class="lead">
+          견적 row에 전제조건, 완수 조건, 테스트 조건, 부수 항목을 입력하면
+          분쟁 예방 기준이 반영된 계약문서 세트를 생성합니다.
+        </p>
+      </div>
+      <div class="header-card" aria-label="MVP 범위">
+        <strong>작성 흐름</strong>
+        <span>1. 입장 선택</span>
+        <span>2. 견적 row 작성</span>
+        <span>3. 계약문서 생성</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="quickstart" aria-labelledby="quickstart-title">
+        <div>
+          <p class="eyebrow">시작</p>
+          <h2 id="quickstart-title">먼저 입장을 고르세요</h2>
+        </div>
+        <div class="role-picker" role="radiogroup" aria-label="작성 입장 선택">
+          <button class="role-card active" type="button" data-role="buyer">
+            <strong>발주자 입장에서 쓰기</strong>
+            <span>원하는 결과물과 검수 기준을 명확히 합니다.</span>
+          </button>
+          <button class="role-card" type="button" data-role="supplier">
+            <strong>수급자 입장에서 쓰기</strong>
+            <span>범위, 수정횟수, 변경요청을 분리합니다.</span>
+          </button>
+          <button class="role-card" type="button" data-role="neutral">
+            <strong>중립 합의안으로 쓰기</strong>
+            <span>양쪽 모두 납득 가능한 기본안을 만듭니다.</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="rfp-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Step 1</p>
+            <h2 id="rfp-title">계약서에 들어갈 기본 정보</h2>
+            <p>입장과 기본 정보를 고른 뒤 견적 row를 채우면 계약문서 초안이 생성됩니다.</p>
+          </div>
+          <div class="button-row">
+            <button id="download-bundle" type="button">계약문서 ZIP</button>
+            <button id="download-contract" class="ghost" type="button">계약서 초안 DOCX</button>
+          </div>
+        </div>
+
+        <div class="grid three">
+          <label>
+            프로젝트명
+            <input id="project-name" placeholder="예: 예약 관리 웹앱 MVP 개발" />
+          </label>
+          <label>
+            발주자
+            <input id="buyer-name" placeholder="예: 발주자 회사명" />
+          </label>
+          <label>
+            수급자
+            <input id="supplier-name" placeholder="예: 수급자 회사명" />
+          </label>
+        </div>
+
+        <div class="grid three">
+          <label>
+            계약 유형
+            <select id="contract-type">
+              <option value="sw-dev">SW 신규/추가 개발</option>
+              <option value="maintenance">운영/유지보수</option>
+              <option value="design-dev">디자인 포함 개발</option>
+              <option value="data-ai">AI/RAG/API 연동 개발</option>
+            </select>
+          </label>
+          <label>
+            무상수정
+            <select id="revision-policy">
+              <option value="2-total">전체 2회</option>
+              <option value="1-milestone">마일스톤별 1회</option>
+              <option value="defect-only">하자만 무상 보완</option>
+            </select>
+          </label>
+          <label>
+            대면회의
+            <select id="meeting-policy">
+              <option value="2-onsite">대면 2회 포함</option>
+              <option value="1-onsite">대면 1회 포함</option>
+              <option value="online-only">온라인 회의만 포함</option>
+            </select>
+          </label>
+        </div>
+
+        <fieldset class="option-panel" aria-labelledby="appendix-title">
+          <legend id="appendix-title">선택 별첨</legend>
+          <p>
+            아래 항목은 필요할 때만 계약서와 생성 파일에 포함됩니다. 선택하지 않은 별첨은 계약문서 세트에 넣지 않습니다.
+          </p>
+          <div class="option-grid">
+            <label class="option-card">
+              <input id="appendix-design-ux" type="checkbox" data-appendix="designUx" />
+              <span>
+                <strong>디자인/UX 수정 범위 별첨</strong>
+                <small>“더 예쁘게”, 라운딩 변경, A안에서 B안 변경 같은 선호 변경 사례를 분류합니다.</small>
+              </span>
+            </label>
+            <label class="option-card">
+              <input id="appendix-revision-counting" type="checkbox" data-appendix="revisionCounting" />
+              <span>
+                <strong>수정횟수 산정 로직 별첨</strong>
+                <small>통합 수정요청 1세트, 분할 제출, 재수정, 하자 미차감 기준을 표로 둡니다.</small>
+              </span>
+            </label>
+          </div>
+        </fieldset>
+
+        <label>
+          무엇을 만들고 싶나요?
+          <textarea id="brief" rows="6" placeholder="무엇을 만들고 싶은지 자연어로 적으세요. 예: 고객 예약을 접수하고 관리자가 일정을 승인하는 웹앱이 필요합니다."></textarea>
+        </label>
+
+        <div class="writer-workspace" aria-labelledby="estimate-title">
+          <div class="writer-head">
+            <div>
+              <p class="eyebrow">Step 2</p>
+              <h2 id="estimate-title">견적 row 작성기</h2>
+              <p>각 row의 전제조건, 완수 조건, 테스트 조건, 부수 항목이 계약서 표로 들어갑니다.</p>
+            </div>
+            <div class="writer-actions">
+              <button id="add-estimate-row" class="ghost" type="button">row 추가</button>
+              <button id="export-estimate-rows" class="ghost" type="button">JSON 내보내기</button>
+              <button id="import-estimate-rows" class="ghost" type="button">JSON 불러오기</button>
+              <input id="import-estimate-rows-file" class="visually-hidden" type="file" accept=".json,application/json" />
+              <strong id="estimate-total">합계 0원</strong>
+            </div>
+          </div>
+
+          <div class="table-scroll" role="region" aria-label="견적 row 입력 표" tabindex="0">
+            <table class="estimate-table">
+              <thead>
+                <tr>
+                  <th>선택</th>
+                  <th>ID</th>
+                  <th>항목</th>
+                  <th>연결 기능</th>
+                  <th>단위</th>
+                  <th>수량</th>
+                  <th>단가</th>
+                  <th>금액</th>
+                  <th>전제조건</th>
+                  <th>완수 조건</th>
+                  <th>테스트 조건</th>
+                  <th>부수 항목</th>
+                  <th>줄이는 분쟁</th>
+                </tr>
+              </thead>
+              <tbody id="estimate-rows"></tbody>
+            </table>
+          </div>
+
+          <div class="row-editor-layout">
+            <section class="overlay-panel" aria-labelledby="row-editor-title">
+              <h3 id="row-editor-title">선택 row 편집</h3>
+              <div id="selected-row-editor"></div>
+            </section>
+            <section class="overlay-panel" aria-labelledby="reflection-title">
+              <h3 id="reflection-title">계약문서 반영 위치</h3>
+              <div id="reflection-map"></div>
+            </section>
+          </div>
+
+          <div class="writer-grid">
+            <section class="overlay-panel" aria-labelledby="overlay-title">
+              <h3 id="overlay-title">문항 오버레이</h3>
+              <div id="overlay-list"></div>
+            </section>
+            <section class="overlay-panel" aria-labelledby="writer-check-title">
+              <h3 id="writer-check-title">작성 체크</h3>
+              <div id="writer-checks"></div>
+            </section>
+          </div>
+        </div>
+
+        <div class="result-box">
+          <h3>발주자 제출용 견적서 미리보기</h3>
+          <div id="buyer-estimate-output" class="docx-preview-shell compact-preview" aria-label="발주자 제출용 견적서 미리보기"></div>
+        </div>
+
+        <div class="check-grid" id="rfp-checks" aria-live="polite"></div>
+
+        <div class="document-bundle" aria-label="생성 문서 목록">
+          <strong>생성되는 파일</strong>
+          <span>00_참고문헌.docx</span>
+          <span>01_입력값_요약표.docx</span>
+          <span>02_RFP_과업내용서.docx</span>
+          <span>03_SW_개발용역계약서_초안.docx</span>
+          <span>04_검수기준표.docx</span>
+          <span>05_수정요청서.docx</span>
+          <span>06_변경요청서.docx</span>
+          <span>07_회의록_승인서.docx</span>
+          <span>08_납품확인서.docx</span>
+          <span>09_하자신고서.docx</span>
+          <span>10_대금_마일스톤_지급표.docx</span>
+          <span>11_권리귀속_소스코드_인도목록.docx</span>
+          <span>12_운영비_API_계정_인수인계서.docx</span>
+          <span>13_개인정보_보안_요구사항.docx</span>
+          <span>14_공급자_수요자_합의표.docx</span>
+          <span>15_견적산정표.docx</span>
+          <span class="optional-file hidden" data-optional-file="designUx">16_선택별첨_디자인_UX_수정범위.docx</span>
+          <span class="optional-file hidden" data-optional-file="revisionCounting">17_선택별첨_수정횟수_산정표.docx</span>
+        </div>
+
+        <div class="result-box">
+          <h3>DOCX 미리보기</h3>
+          <div id="rfp-output" class="docx-preview-shell" aria-label="계약서 초안 DOCX 미리보기"></div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="agreement-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Step 3</p>
+            <h2 id="agreement-title">서로 납득할 기준</h2>
+            <p>수요자와 공급자가 각각 얻는 이점과 균형안을 한 줄로 보여줍니다.</p>
+          </div>
+          <button id="download-agreement" class="ghost" type="button">합의표 DOCX</button>
+        </div>
+
+        <div id="agreement-table" class="agreement-table"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="risk-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Step 4</p>
+            <h2 id="risk-title">계약 입력 점검</h2>
+            <p>계약서 본문을 붙여넣으면 무상수정, 검수, 변경요청, 회의 관련 누락 항목을 찾습니다.</p>
+          </div>
+          <button id="download-risk" class="ghost" type="button">점검 결과 DOCX</button>
+        </div>
+
+        <label>
+          계약서 본문
+          <textarea id="contract-text" rows="10" placeholder="계약서 본문을 붙여넣으세요. HWPX/PDF는 kordoc 등으로 Markdown/Text 변환 후 넣는 것을 권장합니다."></textarea>
+        </label>
+
+        <div class="grid two">
+          <label>
+            파일 업로드
+            <input id="file-input" type="file" accept=".txt,.md,.html,.csv,.json" />
+          </label>
+          <div class="score-card">
+            <span>리스크 점수</span>
+            <strong id="risk-score">0</strong>
+            <em id="risk-band">대기 중</em>
+          </div>
+        </div>
+
+        <div id="risk-results" class="risk-results" aria-live="polite"></div>
+
+        <div class="result-box">
+          <h3>DOCX 미리보기</h3>
+          <div id="risk-output" class="docx-preview-shell" aria-label="계약 입력 점검 DOCX 미리보기"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        이 도구는 법률 자문이 아니라 계약 운영 리스크 탐지 초안입니다.
+        실제 계약서 반영 전 변호사 검토가 필요합니다.
+      </p>
+    </footer>
+
+    <script type="module" src="./assets/app.js?v=20260506-1"></script>
+  </body>
+</html>

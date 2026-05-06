@@ -1,0 +1,31 @@
+{
+  "project": {
+    "name": "",
+    "type": "sw-dev",
+    "purpose": "",
+    "users": []
+  },
+  "requirements": [
+    {
+      "id": "",
+      "title": "",
+      "description": "",
+      "included": true,
+      "acceptanceCriteria": []
+    }
+  ],
+  "deliverables": [
+    "source-code",
+    "deployment-url",
+    "admin-account",
+    "db-schema",
+    "operation-guide"
+  ],
+  "commercialTerms": {
+    "freeRevisionCount": 2,
+    "revisionUnit": "통합 수정요청 1세트",
+    "reviewWindowBusinessDays": 5,
+    "changeRequestRequired": true
+  }
+}
+

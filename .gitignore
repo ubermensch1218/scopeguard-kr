@@ -1,0 +1,55 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Dependencies / build outputs
+node_modules/
+dist/
+build/
+coverage/
+
+# Generated document package
+output/
+
+# Local environment and deployment state
+.env
+.env.*
+!.env.example
+.dev.vars
+.wrangler/
+
+# Local/private contract inputs
+data/contract-input.json
+data/*.local.json
+data/*.private.json
+data/uploads/
+data/raw/
+
+# Private work area
+private/
+.private/
+local/
+tmp/
+
+# Local assistant/runtime state.
+# Project skill files under .claude/skills and .codex/skills are intentionally public.
+.claude/settings.local.json
+.claude/**/cache/
+.codex/sessions/
+.codex/state/
+.codex/logs/
+.omx/
+
+# Credentials and private material by filename convention
+*secret*
+*credentials*
+*.pem
+*.key
+*.p12
+*.mobileprovision
+*.local.docx
+*.private.docx
+*.local.hwpx
+*.private.hwpx

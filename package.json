@@ -1,0 +1,20 @@
+{
+  "name": "scopeguard-kr",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SW 외주개발계약 선택형 입력값 기반 DOCX 계약문서 생성기",
+  "scripts": {
+    "dev": "python3 -m http.server 4173",
+    "check": "node scripts/check-data.mjs",
+    "build:docs": "node scripts/build-docx-package.mjs",
+    "audit:publish": "node scripts/audit-publish.mjs"
+  },
+  "keywords": [
+    "contract",
+    "rfp",
+    "software-outsourcing",
+    "korea",
+    "risk-checklist"
+  ],
+  "license": "MIT"
+}

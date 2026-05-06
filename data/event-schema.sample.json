@@ -1,0 +1,44 @@
+{
+  "schema": "scopeguard.analytics.v1",
+  "events": [
+    {
+      "name": "role_selected",
+      "at": "2026-05-06T00:00:00.000Z",
+      "role": "supplier",
+      "rowCount": 2,
+      "payload": {
+        "role": "supplier"
+      }
+    },
+    {
+      "name": "estimate_row_updated",
+      "at": "2026-05-06T00:00:10.000Z",
+      "role": "supplier",
+      "rowCount": 2,
+      "payload": {
+        "rowId": "EST-002",
+        "field": "completionCondition",
+        "source": "panel"
+      }
+    },
+    {
+      "name": "appendix_option_changed",
+      "at": "2026-05-06T00:00:20.000Z",
+      "role": "supplier",
+      "rowCount": 2,
+      "payload": {
+        "key": "revisionCounting",
+        "enabled": true
+      }
+    },
+    {
+      "name": "estimate_rows_exported",
+      "at": "2026-05-06T00:00:30.000Z",
+      "role": "supplier",
+      "rowCount": 2,
+      "payload": {
+        "rowCount": 2
+      }
+    }
+  ]
+}

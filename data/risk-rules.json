@@ -1,0 +1,37 @@
+[
+  {
+    "id": "unlimited-revision",
+    "severity": "critical",
+    "title": "무상수정 무제한 위험",
+    "keywords": ["무제한", "계약기간 내 수정", "만족할 때까지", "수시 수정"],
+    "recommendation": "무상수정 총 횟수와 통합 수정요청 1회 기준을 정한다."
+  },
+  {
+    "id": "acceptance-missing",
+    "severity": "critical",
+    "title": "검수 기준 누락",
+    "requiredTerms": ["검수", "합격 기준", "반려", "승인간주"],
+    "recommendation": "기능별 검수 기준과 반려 기한을 둔다."
+  },
+  {
+    "id": "change-request-missing",
+    "severity": "critical",
+    "title": "변경요청 절차 누락",
+    "requiredTerms": ["변경요청", "CR", "별도 견적", "일정 조정"],
+    "recommendation": "신규 기능, 신규 화면, 데이터 구조 변경은 변경요청으로 처리한다."
+  },
+  {
+    "id": "payment-missing",
+    "severity": "critical",
+    "title": "대금 지급·미지급 대응 누락",
+    "requiredTerms": ["대금", "지급 기한", "계약금", "잔금", "미지급"],
+    "recommendation": "지급 시기, 지급 조건, 지연 시 조치, 중도 종료 시 기성 정산 기준을 둔다."
+  },
+  {
+    "id": "termination-missing",
+    "severity": "warning",
+    "title": "계약 해제·중도 종료 기준 누락",
+    "requiredTerms": ["해제", "해지", "중도 종료", "기성", "정산"],
+    "recommendation": "중도 종료 사유, 이행 최고, 기성 산출물 정산, 자료 인도 기준을 둔다."
+  }
+]
