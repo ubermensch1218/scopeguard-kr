@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Private or sensitive report
+    url: https://github.com/ubermensch1218/scopeguard-kr/security/advisories/new
+    about: Do not post private contract data or access details in public issues.
+

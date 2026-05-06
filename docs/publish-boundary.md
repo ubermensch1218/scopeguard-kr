@@ -9,6 +9,8 @@
 | 영역 | 이유 |
 |---|---|
 | `README.md`, `CONTRIBUTING.md`, `LICENSE` | 프로젝트 설명과 기여 기준 |
+| `SECURITY.md` | 민감한 제보와 공개 저장소 경계 |
+| `.github/` | PR, 이슈, CI, CODEOWNERS 설정 |
 | `index.html`, `assets/` | 정적 입력 UI |
 | `scripts/` | DOCX 생성기와 문서별 빌더 |
 | `templates/` | 공개 가능한 문서 템플릿 |
@@ -43,3 +45,14 @@ npm run build:docs
 ```
 
 `output/`은 생성 검증에는 쓰지만 저장소에는 올리지 않습니다. 공개용 DOCX 샘플이 필요하면 `samples/` 아래에 익명화된 별도 샘플로 추가합니다. `npm run audit:publish`는 공개용 샘플 3종을 모두 생성해 문서 무결성, 선택 별첨 포함 여부, 견적 row 연결, 민감 문자열 포함 여부를 확인합니다.
+
+## PR 방어막
+
+| 장치 | 역할 |
+|---|---|
+| `.github/workflows/audit.yml` | PR과 `main` push에서 필수 파일 점검과 공개 전 audit 실행 |
+| `.github/pull_request_template.md` | 공개 경계, 계약 문구 위험, 검증 체크를 PR 작성자가 확인 |
+| `.github/ISSUE_TEMPLATE/` | 공개 이슈에 실계약 정보가 들어오지 않도록 입력 항목 제한 |
+| `.github/CODEOWNERS` | 저장소 전체 변경에 maintainer 리뷰 요청 |
+| `SECURITY.md` | 민감한 제보는 공개 이슈가 아니라 비공개 채널로 유도 |
+| `docs/pr-review-checklist.md` | 리뷰어가 같은 기준으로 공개 경계와 계약 문구를 확인 |

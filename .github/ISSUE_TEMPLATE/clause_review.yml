@@ -1,0 +1,45 @@
+name: Clause or rule review
+description: Propose a contract clause, document field, or dispute-reduction rule.
+title: "[Review]: "
+labels:
+  - review
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Keep examples fictional. This project writes draft documents and check rules; it does not provide legal advice.
+  - type: input
+    id: area
+    attributes:
+      label: Area
+      placeholder: 검수, 수정횟수, 변경요청, 대면회의, 대금, 권리귀속
+    validations:
+      required: true
+  - type: textarea
+    id: dispute
+    attributes:
+      label: Dispute this should reduce
+      description: What repeated conflict does this clause or rule reduce?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed wording or rule
+      description: Draft text, checklist field, or JSON rule.
+    validations:
+      required: true
+  - type: textarea
+    id: buyer_supplier
+    attributes:
+      label: Buyer and supplier impact
+      description: Explain the effect on both sides.
+    validations:
+      required: true
+  - type: textarea
+    id: docs
+    attributes:
+      label: Documents affected
+      description: Which generated docs or templates should change?
+      placeholder: 계약서, RFP, 검수기준표, 수정요청서, 변경요청서, 견적산정표
+

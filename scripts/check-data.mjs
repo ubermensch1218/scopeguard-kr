@@ -2,8 +2,17 @@ import fs from "node:fs";
 
 const required = [
   "index.html",
+  ".github/CODEOWNERS",
+  ".github/pull_request_template.md",
+  ".github/workflows/audit.yml",
+  ".github/ISSUE_TEMPLATE/config.yml",
+  ".github/ISSUE_TEMPLATE/bug_report.yml",
+  ".github/ISSUE_TEMPLATE/clause_review.yml",
   ".claude/skills/sw-contract-scopeguard/SKILL.md",
   ".codex/skills/sw-contract-scopeguard/SKILL.md",
+  "CONTRIBUTING.md",
+  "SECURITY.md",
+  "README.md",
   "assets/app.js",
   "assets/styles.css",
   "scripts/build-docx-package.mjs",
@@ -54,6 +63,7 @@ const required = [
   "docs/question-overlay-map.md",
   "docs/event-schema.md",
   "docs/skill-first-plan.md",
+  "docs/pr-review-checklist.md",
 ];
 
 let ok = true;

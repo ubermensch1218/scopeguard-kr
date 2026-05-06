@@ -1,0 +1,39 @@
+name: Audit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  publish-audit:
+    name: Publish boundary and DOCX audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install DOCX audit tools
+        run: sudo apt-get update && sudo apt-get install -y zip unzip
+
+      - name: Check required files
+        run: npm run check
+
+      - name: Audit publish boundary
+        run: npm run audit:publish
+
+      - name: Confirm generated docs stay untracked
+        run: |
+          if git ls-files --error-unmatch output >/dev/null 2>&1; then
+            echo "output/ must not be tracked"
+            exit 1
+          fi
