@@ -1,51 +1,52 @@
 # scopeguard-kr
 
-SW 외주개발계약에서 반복되는 과업범위, 검수, 수정횟수, 변경요청, 회의기록 분쟁을 줄이기 위한 계약문서 생성 오픈 프로젝트입니다.
+SW 외주개발계약에서 반복되는 과업범위, 검수, 수정횟수, 변경요청, 회의기록 분쟁을 줄이기 위한 **계약문서 생성기**입니다.
 
-목적은 소송 자동화가 아닙니다. 말뿐인 가이드라인을 보여주는 것도 아닙니다. 견적 row, 전제조건, 완수 조건, 테스트 조건, 부수 항목을 입력하면 그 기준이 계약서 본문과 부속서류에 반영되도록 만드는 것이 목적입니다.
+> “누가 이긴다”를 예측하는 도구가 아니라, “이 요청이 하자인지, 무상수정인지, 변경요청인지”를 계약 기준으로 분리하게 만드는 작성기입니다.
 
-한 줄로 말하면:
+`scopeguard-kr`는 견적 row, 전제조건, 완수 조건, 테스트 조건, 부수 항목을 입력받고 그 기준을 계약서 본문, 부속서류, XLSX 체크표에 반영합니다. 법률 자문, 공증, 소송 자동화, 판결 예측을 하지 않습니다.
 
-> “누가 이긴다”를 예측하는 도구가 아니라, “이 요청이 하자인지, 무상수정인지, 변경요청인지”를 계약 기준으로 분리하게 만드는 계약서 작성기입니다.
+## At A Glance
 
-## What It Builds
+| 항목 | 내용 |
+|---|---|
+| 목표 | 계약 전후의 모호한 합의 기준을 문서와 표로 고정 |
+| 주요 사용자 | 발주자, 수급자, PM, 디자이너, 개발사, 실무 검토자 |
+| 핵심 입력 | 견적 row, 요구사항 ID, 기능별 화면/결과, 검수 기준 |
+| 주요 출력 | DOCX 계약문서, XLSX 체크표, ZIP 패키지 |
+| 우선 사용 방식 | Claude/Codex Skill 기반 작성 보조 |
+| 공개 경계 | 실제 계약 입력값, 업로드 원본, 생성 파일, 환경변수는 저장소에 올리지 않음 |
 
-현재 MVP는 선택형 입력값과 견적 row를 받아 DOCX/XLSX 계약문서 패키지를 생성합니다.
+## Why
 
-- 계약서 초안
-- RFP 및 과업내용서
-- 검수기준표
-- 수정요청서
-- 변경요청서
-- 회의록 승인서
-- 납품확인서
-- 하자신고서
-- 대금 및 마일스톤 지급표
-- 권리귀속 및 소스코드 인도목록
-- 운영비/API/계정 인수인계서
-- 개인정보 및 보안 요구사항
-- 공급자/수요자 합의표
-- 견적산정표
-- 기능별 구현·디자인 명세서
-- 착수자료 확정표
-- 검수실행 기록표
-- 계약서 리스크 검토표
-- 선택 별첨
+개발용역 분쟁은 개발 자체보다 계약 전후 구조가 열려 있어서 커지는 경우가 많습니다.
 
-선택 별첨은 입력값에서 켠 경우에만 생성됩니다.
+| 자주 터지는 문제 | 문서로 닫는 방식 |
+|---|---|
+| PRD, 기능정의서, 화면설계서 없이 착수 | 착수자료 확정표와 기능별 착수 조건 |
+| 검수 기준 없이 납품 | 검수기준표와 검수실행 기록표 |
+| 하자, 경미한 수정, UX 개선, 신규 기능이 섞임 | 하자신고서, 수정요청서, 변경요청서 분리 |
+| 무상수정 횟수와 “수정 1회” 기준이 없음 | 수정횟수 산정표 |
+| 구두 요청이 계약 범위처럼 주장됨 | 회의록 승인서와 구두 요청 효력 기준 |
+| 대금 지급 조건이 산출물/검수와 끊김 | 대금 마일스톤 지급표 |
+| 소스코드와 사전보유자산 귀속이 모호함 | 권리귀속/소스코드 인도목록 |
 
-- `16_선택별첨_디자인_UX_수정범위.docx`
-- `17_선택별첨_수정횟수_산정표.docx`
+## What It Creates
 
-## Quickstart
+문서는 성격에 따라 나눕니다. 읽고 승인하는 문서는 DOCX, 행 단위로 확인하는 긴 표는 XLSX를 우선합니다.
 
-```bash
-npm run check
-npm run audit:publish
-npm run build:docs
-```
+| 구분 | 산출물 | 형식 |
+|---|---|---|
+| 계약 기준 | 계약서 초안, RFP/과업내용서, 입력값 요약표 | DOCX, XLSX |
+| 범위·견적 | 견적산정표, 기능별 구현·디자인 명세서, 착수자료 확정표 | DOCX, XLSX |
+| 검수·납품 | 검수기준표, 검수실행 기록표, 납품확인서 | DOCX, XLSX |
+| 요청 처리 | 수정요청서, 변경요청서, 하자신고서, 회의록 승인서 | DOCX, XLSX |
+| 비용·운영 | 대금 마일스톤 지급표, 운영비/API/계정 인수인계서 | DOCX, XLSX |
+| 권리·보안 | 권리귀속/소스코드 인도목록, 개인정보/보안 요구사항 | DOCX |
+| 합의·리스크 | 공급자/수요자 합의표, 계약서 리스크 검토표 | DOCX, XLSX |
+| 선택 별첨 | 디자인/UX 수정범위, 수정횟수 산정표 | DOCX, XLSX |
 
-생성 결과는 `output/`에 저장됩니다.
+기본 샘플 기준 생성 결과:
 
 ```text
 output/
@@ -59,6 +60,16 @@ output/
   scopeguard_sw_contract_docs.zip
 ```
 
+전체 문서 매트릭스는 [`docs/document-set.md`](docs/document-set.md)에 있습니다.
+
+## Quickstart
+
+```bash
+npm run check
+npm run audit:publish
+npm run build:docs
+```
+
 입력 파일을 지정할 수도 있습니다.
 
 ```bash
@@ -67,17 +78,17 @@ node scripts/build-docx-package.mjs --input data/contract-input.design.sample.js
 node scripts/build-docx-package.mjs --input data/contract-input.ops.sample.json
 ```
 
-공개 전에는 `npm run audit:publish`를 먼저 실행합니다. 이 명령은 공개용 샘플 3종을 모두 DOCX/XLSX로 생성하고, 문서 무결성, 선택 별첨 on/off, 견적 row 연결, 양식별 필수 내용, 민감 문자열 포함 여부를 확인합니다.
-
 정적 웹 입력 화면은 아래 명령으로 확인합니다.
 
 ```bash
 npm run dev
 ```
 
-브라우저에서 `http://localhost:4173`을 열면 됩니다.
+브라우저에서 `http://localhost:4173`을 엽니다.
 
-## Core Input
+## Core Inputs
+
+### 1. 견적 Row
 
 핵심 입력 단위는 견적 row입니다. 금액만 넣는 견적서가 아니라, “이 금액이 어떤 조건에서 유효한지”를 같이 잠그는 구조입니다.
 
@@ -98,6 +109,8 @@ npm run dev
 
 이 row는 계약서, RFP, 검수기준표, 대금표, 견적산정표에 같이 반영됩니다.
 
+### 2. 기능별 구현·디자인 명세
+
 기능별 구현·디자인 명세는 `featureSpecs`로 입력합니다.
 
 | 필드 | 의미 |
@@ -111,24 +124,47 @@ npm run dev
 | `completionCondition` | 완료로 볼 조건 |
 | `testCondition` | 검수 때 확인할 테스트 조건 |
 
-## Why
+## Skill First
 
-개발용역 분쟁은 대부분 개발 자체보다 계약 전후 구조가 열려 있어서 커집니다.
+초기 사용 흐름은 웹앱보다 Claude/Codex Skill 형태를 우선합니다.
 
-- PRD, 기능정의서, 화면설계서 없이 착수
-- 검수기준 없이 납품
-- 하자, 경미한 수정, UX 개선, 신규 기능이 한 요청에 섞임
-- 무상수정 횟수와 “수정 1회” 기준이 없음
-- 대면회의와 구두요청이 계약 범위처럼 주장됨
-- 변경요청의 비용/일정 조정 절차가 없음
+| 위치 | 역할 |
+|---|---|
+| `.claude/skills/sw-contract-scopeguard/SKILL.md` | Claude용 최상단 orchestrator skill |
+| `.codex/skills/sw-contract-scopeguard/SKILL.md` | Codex용 최상단 orchestrator skill |
+| `references/documents/index.md` | 문서별 recipe module 라우팅 |
+| `references/documents/{문서번호-이름}/recipe.md` | 각 문서의 입력, 출력, 검증 기준 |
 
-`scopeguard-kr`는 이 항목들을 체크리스트로만 보여주지 않고, 계약서 조항과 부속서류 표에 반영합니다.
+웹앱은 입력 보조 화면입니다. 최종 계약 문구 확정이나 법률 판단을 대신하지 않습니다.
+
+스킬 입증 기준은 [`docs/skill-proof.md`](docs/skill-proof.md)에 있습니다.
+
+## Verification
+
+공개 전에는 반드시 아래 명령을 실행합니다.
+
+```bash
+npm run audit:publish
+```
+
+이 명령은 다음을 확인합니다.
+
+| 검증 | 내용 |
+|---|---|
+| 문법 | JS/MJS 생성기 문법 검사 |
+| 샘플 JSON | 공개 샘플 3종 파싱 |
+| DOCX/XLSX 생성 | 샘플별 문서 수와 압축 무결성 검사 |
+| 선택 별첨 | 디자인/UX, 수정횟수 별첨 on/off 확인 |
+| 견적 연결 | 견적 row ID가 핵심 문서에 반영되는지 확인 |
+| 필수 내용 | 각 문서와 workbook의 필수 문구 확인 |
+| 공개 경계 | 민감 문자열과 ignore 경계 확인 |
+| 스킬 구조 | orchestrator와 문서별 recipe module 존재 확인 |
 
 ## Project Structure
 
 ```text
 .github/
-  workflows/audit.yml     # PR/push 공개 경계와 DOCX/XLSX 생성 audit
+  workflows/audit.yml     # 공개 경계와 DOCX/XLSX 생성 audit
   ISSUE_TEMPLATE/         # 공개 이슈 입력 양식
   pull_request_template.md
 
@@ -159,55 +195,39 @@ docs/                     # PRD, 데이터 모델, 참고문헌, 감사 기록
 samples/                  # 계약서 표본
 ```
 
-DOCX 내용은 `scripts/docx/docs/*.mjs`, XLSX 내용은 `scripts/xlsx/workbooks/*.mjs`에 문서별로 분리되어 있습니다. `scripts/build-docx-package.mjs`는 공통 패키징과 ZIP 생성을 담당합니다.
-
 ## Publish Boundary
 
-GitHub에는 소스, 템플릿, 익명화된 샘플만 올립니다. 실계약 입력값, 업로드 원본 문서, 생성 DOCX/XLSX/ZIP, 환경변수, 로컬 실행 상태는 올리지 않습니다.
+GitHub에는 소스, 템플릿, 익명화된 샘플만 올립니다.
 
-공개 대상:
+| 공개 대상 | 비공개/ignore 대상 |
+|---|---|
+| `README.md`, `CONTRIBUTING.md`, `LICENSE` | `output/` |
+| `.github/` | `private/`, `.private/`, `local/`, `tmp/` |
+| `index.html`, `assets/` | `data/contract-input.json` |
+| `scripts/`, `templates/`, `docs/` | `data/*.local.json`, `data/*.private.json` |
+| `samples/` | `data/uploads/`, `data/raw/` |
+| `data/*.sample.json` | `.env*`, `.dev.vars`, `.wrangler/` |
+| `.claude/skills/sw-contract-scopeguard/` | 로컬 assistant/runtime state |
+| `.codex/skills/sw-contract-scopeguard/` | 업로드 원본 문서, 생성 DOCX/XLSX/ZIP |
 
-- `README.md`, `CONTRIBUTING.md`, `LICENSE`
-- `.github/`
-- `index.html`, `assets/`
-- `scripts/`, `templates/`, `docs/`
-- `samples/`
-- `data/*.sample.json`
-- `.claude/skills/sw-contract-scopeguard/`
-- `.codex/skills/sw-contract-scopeguard/`
+자세한 기준은 [`docs/publish-boundary.md`](docs/publish-boundary.md)에 있습니다. 공개 PR은 `npm run audit:publish`를 통과해야 합니다.
 
-비공개/ignore 대상:
+## Participation
 
-- `output/`
-- `private/`, `.private/`, `local/`, `tmp/`
-- `data/contract-input.json`
-- `data/*.local.json`, `data/*.private.json`
-- `data/uploads/`, `data/raw/`
-- `.env*`, `.dev.vars`, `.wrangler/`
-- 로컬 assistant/runtime state
+| 참여자 | 필요한 검토 |
+|---|---|
+| 변호사 | 하자·무상수정·변경요청·검수·회의록·권리귀속의 경계 |
+| 개발사/프리랜서 | 실제로 자주 터지는 요청 유형과 견적 row 구조 |
+| 발주자 | 이해하기 쉬운 입력 문항과 검수 기준 |
+| 디자이너/PM | 화면설계, 디자인 변경, UX 개선 요청 분류 |
+| 문서 자동화 개발자 | DOCX/XLSX/HWPX 생성, JSON Schema, UI 작성 흐름 |
 
-자세한 기준은 `docs/publish-boundary.md`에 정리되어 있습니다.
+관련 문서:
 
-PR 리뷰 기준은 `docs/pr-review-checklist.md`에 있습니다. 공개 PR은 `npm run audit:publish`를 통과해야 합니다.
-
-## Roadmap And Participation
-
-- 로드맵: `docs/roadmap.md`
-- 변호사 참여 안내: `docs/lawyer-participation.md`
-- 참여자 니즈 수집 기준: `docs/stakeholder-needs.md`
-
-변호사 리뷰는 조항의 승패 판단이 아니라, 하자·무상수정·변경요청·검수·회의록·권리귀속의 경계를 더 명확하게 만드는 방향으로 받습니다. 발주자, 수급자, PM, 디자이너, 개발사, 플랫폼 운영자의 니즈는 `Stakeholder need` 이슈 템플릿으로 받습니다.
-
-## Skill First
-
-초기 사용 흐름은 웹앱보다 Claude/Codex Skill 형태를 우선합니다.
-
-- `.claude/skills/sw-contract-scopeguard/SKILL.md`
-- `.codex/skills/sw-contract-scopeguard/SKILL.md`
-
-`sw-contract-scopeguard`는 최상단 orchestrator skill입니다. 문서별 작성법은 각 skill 폴더의 `references/documents/{문서번호-이름}/recipe.md`에 나눠 둡니다.
-
-웹앱은 입력 보조 화면입니다. 최종 계약 문구 확정이나 법률 판단을 대신하지 않습니다.
+- [`docs/roadmap.md`](docs/roadmap.md)
+- [`docs/lawyer-participation.md`](docs/lawyer-participation.md)
+- [`docs/stakeholder-needs.md`](docs/stakeholder-needs.md)
+- [`docs/pr-review-checklist.md`](docs/pr-review-checklist.md)
 
 ## References
 
@@ -219,7 +239,7 @@ PR 리뷰 기준은 `docs/pr-review-checklist.md`에 있습니다. 공개 PR은 
 - `chrisryugj/korean-law-mcp`: 법제처 API 기반 법령·공개문서·행정규칙 조회
 - `chrisryugj/kordoc`: HWP/HWPX/PDF/DOCX/XLSX 문서 파싱·비교·생성
 
-정리된 참고 목록은 `docs/reference-bibliography.md`와 `docs/legal-mcp-findings.md`에 있습니다.
+정리된 참고 목록은 [`docs/reference-bibliography.md`](docs/reference-bibliography.md)와 [`docs/legal-mcp-findings.md`](docs/legal-mcp-findings.md)에 있습니다.
 
 외부 실무 글은 공개 참고문헌이나 계약 조항의 출처로 직접 싣지 않습니다. 요구사항 정의, 결과물 형식, 수정 범위, 유지보수 범위, 대금 정산, 업무 범위, 산출물 사용 범위처럼 반복되는 작성 패턴만 제품 문항으로 추상화합니다.
 
@@ -234,11 +254,3 @@ PR 리뷰 기준은 `docs/pr-review-checklist.md`에 있습니다. 공개 PR은 
 - 검수기준과 승인간주 조항
 - 소스코드, 사전보유자산, 오픈소스 권리 귀속
 - 개인정보 처리위탁과 운영비/API비 부담 기준
-
-## Repository Name
-
-추천 저장소 이름:
-
-```text
-ubermensch1218/scopeguard-kr
-```
