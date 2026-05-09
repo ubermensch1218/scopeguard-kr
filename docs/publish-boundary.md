@@ -12,7 +12,7 @@
 | `SECURITY.md` | 민감한 제보와 공개 저장소 경계 |
 | `.github/` | PR, 이슈, CI, CODEOWNERS 설정 |
 | `index.html`, `assets/` | 정적 입력 UI |
-| `scripts/` | DOCX 생성기와 문서별 빌더 |
+| `scripts/` | DOCX/XLSX 생성기와 문서별 빌더 |
 | `templates/` | 공개 가능한 문서 템플릿 |
 | `docs/` | PRD, 데이터 모델, 참고문헌, 공개 검토 문서 |
 | `samples/` | 익명화된 표본 |
@@ -26,7 +26,7 @@
 
 | 영역 | 이유 |
 |---|---|
-| `output/` | 생성 DOCX/ZIP 산출물 |
+| `output/` | 생성 DOCX/XLSX/ZIP 산출물 |
 | `private/`, `.private/`, `local/` | 실계약, 실고객, 내부 메모 |
 | `data/contract-input.json` | 실제 프로젝트 입력값 |
 | `data/*.local.json`, `data/*.private.json` | 로컬 또는 비공개 입력값 |
@@ -44,7 +44,7 @@ npm run audit:publish
 npm run build:docs
 ```
 
-`output/`은 생성 검증에는 쓰지만 저장소에는 올리지 않습니다. 공개용 DOCX 샘플이 필요하면 `samples/` 아래에 익명화된 별도 샘플로 추가합니다. `npm run audit:publish`는 공개용 샘플 3종을 모두 생성해 문서 무결성, 선택 별첨 포함 여부, 견적 row 연결, 민감 문자열 포함 여부를 확인합니다.
+`output/`은 생성 검증에는 쓰지만 저장소에는 올리지 않습니다. 공개용 문서 샘플이 필요하면 `samples/` 아래에 익명화된 별도 샘플로 추가합니다. `npm run audit:publish`는 공개용 샘플 3종을 모두 생성해 문서 무결성, 선택 별첨 포함 여부, 견적 row 연결, 민감 문자열 포함 여부를 확인합니다.
 
 ## PR 방어막
 

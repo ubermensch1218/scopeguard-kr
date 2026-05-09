@@ -34,6 +34,7 @@
 | `appendix_option_changed` | 선택 별첨 변경 | `{ key, enabled }` |
 | `docx_bundle_downloaded` | ZIP 다운로드 | `{ rowCount }` |
 | `contract_docx_downloaded` | 계약서 DOCX 다운로드 | `{ rowCount }` |
+| `workbook_xlsx_downloaded` | XLSX 다운로드 | `{ workbookName, rowCount }` |
 
 ## 향후 분석 지표
 

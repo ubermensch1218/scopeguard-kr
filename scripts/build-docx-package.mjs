@@ -3,6 +3,8 @@ import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { buildDocuments } from "./docx/docs/index.mjs";
+import { buildWorkbooks } from "./xlsx/workbooks/index.mjs";
+import { writeXlsx } from "./xlsx/writer.mjs";
 import { v } from "./docx/helpers.mjs";
 
 const root = path.resolve(new URL("..", import.meta.url).pathname);
@@ -142,13 +144,16 @@ function main() {
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
   const documents = buildDocuments(input);
+  const workbooks = buildWorkbooks(input);
   for (const doc of documents) writeDocx(doc);
+  for (const workbook of workbooks) writeXlsx(workbook, outDir);
 
   const packagePath = path.join(outDir, "scopeguard_sw_contract_docs.zip");
-  execFileSync("zip", ["-qr", packagePath, ...documents.map((doc) => doc.file)], { cwd: outDir });
+  execFileSync("zip", ["-qr", packagePath, ...documents.map((doc) => doc.file), ...workbooks.map((workbook) => workbook.file)], { cwd: outDir });
 
   console.log(`input ${inputPath}`);
   console.log(`created ${documents.length} docx files in ${outDir}`);
+  console.log(`created ${workbooks.length} xlsx files in ${outDir}`);
   console.log(`created ${packagePath}`);
 }
 

@@ -65,7 +65,7 @@ MVP는 아래 조건을 모두 만족해야 종료한다.
 | RFP/과업내용서 DOCX 생성 | `02_RFP_과업내용서.docx` 생성 및 Word 패키지 검사 |
 | 검수기준표 DOCX 생성 | `04_검수기준표.docx` 생성 및 Word 패키지 검사 |
 | 견적산정표 DOCX 생성 | `15_견적산정표.docx` 생성 및 Word 패키지 검사 |
-| 수정요청서/변경요청서 등 부속서류 ZIP 생성 | `scopeguard_sw_contract_docs.zip`에 16개 DOCX 포함 |
+| 수정요청서/변경요청서 등 부속서류 ZIP 생성 | `scopeguard_sw_contract_docs.zip`에 기본 17개 DOCX와 14개 XLSX 포함 |
 | 견적 row가 핵심 문서에 반영 | RFP, 계약서, 검수기준표, 대금표, 견적산정표의 XML에서 `EST-` 확인 |
 | 브라우저 콘솔 에러 없음 | Playwright 콘솔 에러 확인 |
 

@@ -15,11 +15,11 @@
 | 계약서 초안 DOCX | `output/03_SW_개발용역계약서_초안.docx` |
 | RFP/과업내용서 DOCX | `output/02_RFP_과업내용서.docx` |
 | 검수기준표 DOCX | `output/04_검수기준표.docx` |
-| 견적산정표 DOCX | `output/15_견적산정표.docx` |
+| 견적산정표 DOCX/XLSX | `output/15_견적산정표.docx`, `output/15_견적산정표.xlsx` |
 | 수정요청서/변경요청서 등 부속서류 ZIP | `output/scopeguard_sw_contract_docs.zip` |
 | 견적 row의 전제조건/완수 조건/테스트 조건/부수 항목 | `data/contract-input.sample.json`의 `estimate.rows[]` |
 | 견적 row가 문서 생성에 반영 | `scripts/build-docx-package.mjs`의 `estimateScopeRows()`, `estimatePaymentRows()`, `estimateRows()` |
-| 웹 DOCX 생성에서 표 렌더링 | `assets/app.js`의 `markdownTable()`, `wordTableXml()`, `markdownToWordParagraphs()` |
+| 웹 문서 생성에서 표 렌더링 | `assets/app.js`의 `markdownTable()`, `wordTableXml()`, `markdownToWordParagraphs()` |
 | 개발 후 각 입장 불편함과 종료 조건 제시 | `docs/mvp-goal-and-exit-criteria.md` |
 
 ## Verification commands
@@ -30,7 +30,7 @@ node --check assets/app.js
 node --check scripts/build-docx-package.mjs
 npm run check
 npm run build:docs
-for f in output/*.docx; do unzip -t "$f" >/dev/null || exit 1; done; unzip -t output/scopeguard_sw_contract_docs.zip >/dev/null
+for f in output/*.docx output/*.xlsx; do unzip -t "$f" >/dev/null || exit 1; done; unzip -t output/scopeguard_sw_contract_docs.zip >/dev/null
 ```
 
 ## Residual risks
@@ -41,4 +41,4 @@ for f in output/*.docx; do unzip -t "$f" >/dev/null || exit 1; done; unzip -t ou
 | 모바일 표 입력이 길고 무거움 | 가로 스크롤로 동작하나 row별 편집 패널이 필요 |
 | 견적 row 입력 로그 수집 | 현재 정적 MVP는 서버 수집 없음. 서비스형 전환 시 별도 이벤트 스키마와 익명화 기준 필요 |
 | 법률 문구 최종 적합성 | 이 프로젝트는 법률 자문이 아니며 전문가 검토 필요 |
-| HWPX 생성 부재 | DOCX MVP 이후 별도 단계 |
+| HWPX 생성 부재 | DOCX/XLSX MVP 이후 별도 단계 |

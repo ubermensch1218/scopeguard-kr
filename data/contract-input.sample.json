@@ -190,6 +190,57 @@
       "status": "발주자 제공 필요"
     }
   ],
+  "featureSpecs": [
+    {
+      "id": "FUNC-001",
+      "name": "회원 로그인",
+      "linkedRequirementIds": [
+        "FUNC-001"
+      ],
+      "linkedEstimateIds": [
+        "EST-002"
+      ],
+      "entryPoints": [
+        "헤더 로그인 버튼",
+        "보호된 페이지 접근 시 로그인 화면 이동"
+      ],
+      "actors": [
+        "일반 사용자",
+        "관리자"
+      ],
+      "designRequirements": [
+        {
+          "name": "정상/오류 상태",
+          "status": "충족",
+          "criteria": "로그인 성공, 비밀번호 오류, 미가입 계정 메시지 구분"
+        },
+        {
+          "name": "빈 상태",
+          "status": "충족",
+          "criteria": "이메일 또는 비밀번호 미입력 시 버튼 비활성 또는 안내 문구 표시"
+        },
+        {
+          "name": "반응형",
+          "status": "확인 필요",
+          "criteria": "모바일 폭에서 입력 필드와 버튼이 겹치지 않음"
+        }
+      ],
+      "flow": "flowchart TD\n  A[헤더 로그인 버튼] --> B[로그인 화면]\n  B --> C[이메일/비밀번호 입력]\n  C --> D{입력값 확인}\n  D -->|성공| E[이전 화면 또는 홈으로 이동]\n  D -->|실패| F[오류 메시지 표시]",
+      "flowSvg": "필요 시 첨부",
+      "finalScreens": [
+        "로그인 화면",
+        "오류 메시지 상태",
+        "로그인 후 홈 화면"
+      ],
+      "finalResults": [
+        "정상 계정은 로그인 상태로 전환",
+        "비정상 계정은 오류 메시지 표시"
+      ],
+      "completionCondition": "이메일과 비밀번호 기반 로그인 성공/실패 흐름이 구현됨",
+      "testCondition": "정상 계정, 비밀번호 오류, 미가입 계정 시나리오 테스트 통과",
+      "disputeReduced": "진입 경로, 오류 상태, 최종 이동 화면 불일치 분쟁"
+    }
+  ],
   "acceptance": {
     "days": "5영업일",
     "rejectionFormat": "요구사항 ID, 재현 절차, 기대 결과, 실제 결과, 첨부 자료를 포함한 서면 제출",

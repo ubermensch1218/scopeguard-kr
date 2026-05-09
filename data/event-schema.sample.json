@@ -39,6 +39,16 @@
       "payload": {
         "rowCount": 2
       }
+    },
+    {
+      "name": "workbook_xlsx_downloaded",
+      "at": "2026-05-06T00:00:40.000Z",
+      "role": "supplier",
+      "rowCount": 2,
+      "payload": {
+        "workbookName": "15_견적산정표.xlsx",
+        "rowCount": 2
+      }
     }
   ]
 }

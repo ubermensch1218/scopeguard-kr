@@ -10,7 +10,7 @@ SW 외주개발계약에서 반복되는 과업범위, 검수, 수정횟수, 변
 
 ## What It Builds
 
-현재 MVP는 선택형 입력값과 견적 row를 받아 DOCX 계약문서 패키지를 생성합니다.
+현재 MVP는 선택형 입력값과 견적 row를 받아 DOCX/XLSX 계약문서 패키지를 생성합니다.
 
 - 계약서 초안
 - RFP 및 과업내용서
@@ -26,6 +26,10 @@ SW 외주개발계약에서 반복되는 과업범위, 검수, 수정횟수, 변
 - 개인정보 및 보안 요구사항
 - 공급자/수요자 합의표
 - 견적산정표
+- 기능별 구현·디자인 명세서
+- 착수자료 확정표
+- 검수실행 기록표
+- 계약서 리스크 검토표
 - 선택 별첨
 
 선택 별첨은 입력값에서 켠 경우에만 생성됩니다.
@@ -48,6 +52,10 @@ output/
   03_SW_개발용역계약서_초안.docx
   04_검수기준표.docx
   15_견적산정표.docx
+  18_기능별_구현_디자인_명세서.docx
+  19_착수자료_확정표.xlsx
+  20_검수실행_기록표.xlsx
+  21_계약서_리스크_검토표.xlsx
   scopeguard_sw_contract_docs.zip
 ```
 
@@ -59,7 +67,7 @@ node scripts/build-docx-package.mjs --input data/contract-input.design.sample.js
 node scripts/build-docx-package.mjs --input data/contract-input.ops.sample.json
 ```
 
-공개 전에는 `npm run audit:publish`를 먼저 실행합니다. 이 명령은 공개용 샘플 3종을 모두 DOCX로 생성하고, 문서 무결성, 선택 별첨 on/off, 견적 row 연결, 민감 문자열 포함 여부를 확인합니다.
+공개 전에는 `npm run audit:publish`를 먼저 실행합니다. 이 명령은 공개용 샘플 3종을 모두 DOCX/XLSX로 생성하고, 문서 무결성, 선택 별첨 on/off, 견적 row 연결, 양식별 필수 내용, 민감 문자열 포함 여부를 확인합니다.
 
 정적 웹 입력 화면은 아래 명령으로 확인합니다.
 
@@ -90,6 +98,19 @@ npm run dev
 
 이 row는 계약서, RFP, 검수기준표, 대금표, 견적산정표에 같이 반영됩니다.
 
+기능별 구현·디자인 명세는 `featureSpecs`로 입력합니다.
+
+| 필드 | 의미 |
+|---|---|
+| `entryPoints` | 화면, 버튼, URL, 메뉴, 알림 등 기능 진입 경로 |
+| `designRequirements` | 디자인 기준 충족 여부와 판단 기준 |
+| `flow` | Mermaid 원문 기반 디자인 플로우 |
+| `flowSvg` | 필요 시 첨부하는 SVG 렌더링 결과 |
+| `finalScreens` | 최종 화면 또는 상태 |
+| `finalResults` | 저장, 이동, 알림, 데이터 변경 등 최종 결과 |
+| `completionCondition` | 완료로 볼 조건 |
+| `testCondition` | 검수 때 확인할 테스트 조건 |
+
 ## Why
 
 개발용역 분쟁은 대부분 개발 자체보다 계약 전후 구조가 열려 있어서 커집니다.
@@ -107,7 +128,7 @@ npm run dev
 
 ```text
 .github/
-  workflows/audit.yml     # PR/push 공개 경계와 DOCX 생성 audit
+  workflows/audit.yml     # PR/push 공개 경계와 DOCX/XLSX 생성 audit
   ISSUE_TEMPLATE/         # 공개 이슈 입력 양식
   pull_request_template.md
 
@@ -123,23 +144,26 @@ data/
   question-overlays.sample.json
 
 scripts/
-  build-docx-package.mjs  # DOCX 패키징과 ZIP 생성
+  build-docx-package.mjs  # DOCX/XLSX 패키징과 ZIP 생성
   audit-publish.mjs       # 공개 전 샘플 빌드와 문자열 점검
   check-data.mjs          # 필수 파일 점검
   docx/
     helpers.mjs           # 공통 문단, 표, 값 포맷
     docs/*.mjs            # DOCX별 문서 빌더
+  xlsx/
+    writer.mjs            # XLSX 패키징
+    workbooks/*.mjs       # XLSX별 워크북 빌더
 
 templates/                # 문서/룰셋 초안
 docs/                     # PRD, 데이터 모델, 참고문헌, 감사 기록
 samples/                  # 계약서 표본
 ```
 
-DOCX 내용은 `scripts/docx/docs/*.mjs`에 문서별로 분리되어 있습니다. `scripts/build-docx-package.mjs`는 문서 내용을 직접 알지 않고, 공통 DOCX 패키징과 ZIP 생성만 담당합니다.
+DOCX 내용은 `scripts/docx/docs/*.mjs`, XLSX 내용은 `scripts/xlsx/workbooks/*.mjs`에 문서별로 분리되어 있습니다. `scripts/build-docx-package.mjs`는 공통 패키징과 ZIP 생성을 담당합니다.
 
 ## Publish Boundary
 
-GitHub에는 소스, 템플릿, 익명화된 샘플만 올립니다. 실계약 입력값, 업로드 원본 문서, 생성 DOCX/ZIP, 환경변수, 로컬 실행 상태는 올리지 않습니다.
+GitHub에는 소스, 템플릿, 익명화된 샘플만 올립니다. 실계약 입력값, 업로드 원본 문서, 생성 DOCX/XLSX/ZIP, 환경변수, 로컬 실행 상태는 올리지 않습니다.
 
 공개 대상:
 
@@ -180,6 +204,8 @@ PR 리뷰 기준은 `docs/pr-review-checklist.md`에 있습니다. 공개 PR은 
 
 - `.claude/skills/sw-contract-scopeguard/SKILL.md`
 - `.codex/skills/sw-contract-scopeguard/SKILL.md`
+
+`sw-contract-scopeguard`는 최상단 orchestrator skill입니다. 문서별 작성법은 각 skill 폴더의 `references/documents/{문서번호-이름}/recipe.md`에 나눠 둡니다.
 
 웹앱은 입력 보조 화면입니다. 최종 계약 문구 확정이나 법률 판단을 대신하지 않습니다.
 

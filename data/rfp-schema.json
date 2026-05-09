@@ -14,6 +14,30 @@
       "acceptanceCriteria": []
     }
   ],
+  "featureSpecs": [
+    {
+      "id": "",
+      "name": "",
+      "linkedRequirementIds": [],
+      "linkedEstimateIds": [],
+      "entryPoints": [],
+      "actors": [],
+      "designRequirements": [
+        {
+          "name": "",
+          "status": "충족 / 미충족 / 해당 없음",
+          "criteria": ""
+        }
+      ],
+      "flow": "flowchart TD\\n  A[진입점] --> B[사용자 입력]\\n  B --> C{검증}\\n  C -->|성공| D[최종 결과]\\n  C -->|실패| E[오류/빈 상태]",
+      "flowSvg": "",
+      "finalScreens": [],
+      "finalResults": [],
+      "completionCondition": "",
+      "testCondition": "",
+      "disputeReduced": ""
+    }
+  ],
   "deliverables": [
     "source-code",
     "deployment-url",
@@ -28,4 +52,3 @@
     "changeRequestRequired": true
   }
 }
-
