@@ -34,9 +34,20 @@ function paragraphXml(text, style = "Normal") {
 }
 
 function cellXml(value, header = false) {
-  const shading = header ? '<w:shd w:fill="EAF1F8"/>' : "";
+  const shading = header ? '<w:shd w:fill="1F4E79"/>' : "";
+  const color = header ? '<w:color w:val="FFFFFF"/>' : '<w:color w:val="222222"/>';
   const boldOpen = header ? "<w:b/>" : "";
-  return `<w:tc><w:tcPr><w:tcW w:w="2400" w:type="dxa"/>${shading}</w:tcPr><w:p><w:r><w:rPr>${boldOpen}</w:rPr><w:t xml:space="preserve">${escapeXml(v(value, ""))}</w:t></w:r></w:p></w:tc>`;
+  return `<w:tc>
+    <w:tcPr>
+      <w:tcW w:w="2400" w:type="dxa"/>
+      <w:vAlign w:val="top"/>
+      ${shading}
+    </w:tcPr>
+    <w:p>
+      <w:pPr><w:spacing w:after="40"/></w:pPr>
+      <w:r><w:rPr>${boldOpen}${color}<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="18"/></w:rPr><w:t xml:space="preserve">${escapeXml(v(value, ""))}</w:t></w:r>
+    </w:p>
+  </w:tc>`;
 }
 
 function tableXml(block) {
@@ -47,16 +58,17 @@ function tableXml(block) {
   return `<w:tbl>
     <w:tblPr>
       <w:tblW w:w="0" w:type="auto"/>
+      <w:tblLook w:firstRow="1" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/>
       <w:tblBorders>
-        <w:top w:val="single" w:sz="4" w:color="B7C2D0"/>
-        <w:left w:val="single" w:sz="4" w:color="B7C2D0"/>
-        <w:bottom w:val="single" w:sz="4" w:color="B7C2D0"/>
-        <w:right w:val="single" w:sz="4" w:color="B7C2D0"/>
-        <w:insideH w:val="single" w:sz="4" w:color="B7C2D0"/>
-        <w:insideV w:val="single" w:sz="4" w:color="B7C2D0"/>
+        <w:top w:val="single" w:sz="6" w:color="B7C2D0"/>
+        <w:left w:val="single" w:sz="6" w:color="B7C2D0"/>
+        <w:bottom w:val="single" w:sz="6" w:color="B7C2D0"/>
+        <w:right w:val="single" w:sz="6" w:color="B7C2D0"/>
+        <w:insideH w:val="single" w:sz="4" w:color="D9E2EC"/>
+        <w:insideV w:val="single" w:sz="4" w:color="D9E2EC"/>
       </w:tblBorders>
       <w:tblCellMar>
-        <w:top w:w="100" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="100" w:type="dxa"/>
+        <w:top w:w="120" w:type="dxa"/><w:left w:w="140" w:type="dxa"/><w:bottom w:w="120" w:type="dxa"/><w:right w:w="140" w:type="dxa"/>
       </w:tblCellMar>
     </w:tblPr>
     ${headerRow}${bodyRows}
@@ -104,24 +116,24 @@ const stylesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   <w:style w:type="paragraph" w:default="1" w:styleId="Normal">
     <w:name w:val="Normal"/>
     <w:pPr><w:spacing w:line="340" w:lineRule="auto" w:after="120"/></w:pPr>
-    <w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="20"/></w:rPr>
+    <w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:color w:val="222222"/><w:sz w:val="20"/></w:rPr>
   </w:style>
   <w:style w:type="paragraph" w:styleId="Title">
     <w:name w:val="Title"/>
     <w:basedOn w:val="Normal"/>
     <w:pPr><w:spacing w:after="280"/></w:pPr>
-    <w:rPr><w:b/><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="34"/></w:rPr>
+    <w:rPr><w:b/><w:color w:val="17365D"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="36"/></w:rPr>
   </w:style>
   <w:style w:type="paragraph" w:styleId="Heading1">
     <w:name w:val="heading 1"/>
     <w:basedOn w:val="Normal"/>
-    <w:pPr><w:spacing w:before="280" w:after="140"/></w:pPr>
-    <w:rPr><w:b/><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="25"/></w:rPr>
+    <w:pPr><w:spacing w:before="320" w:after="140"/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="D9E2EC"/></w:pBdr></w:pPr>
+    <w:rPr><w:b/><w:color w:val="1F4E79"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="25"/></w:rPr>
   </w:style>
   <w:style w:type="paragraph" w:styleId="Quote">
     <w:name w:val="Quote"/>
     <w:basedOn w:val="Normal"/>
-    <w:pPr><w:ind w:left="360"/><w:spacing w:before="80" w:after="160"/></w:pPr>
+    <w:pPr><w:ind w:left="300"/><w:spacing w:before="80" w:after="180"/><w:pBdr><w:left w:val="single" w:sz="12" w:space="8" w:color="9EB6D8"/></w:pBdr></w:pPr>
     <w:rPr><w:i/><w:color w:val="5C667A"/></w:rPr>
   </w:style>
 </w:styles>`;

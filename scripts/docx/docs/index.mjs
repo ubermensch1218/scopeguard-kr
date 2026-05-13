@@ -18,6 +18,7 @@ import { build as estimateSheet } from "./15-estimate-sheet.mjs";
 import { build as designUxAppendix } from "./16-design-ux-appendix.mjs";
 import { build as revisionCountingAppendix } from "./17-revision-counting-appendix.mjs";
 import { build as featureDesignSpec } from "./18-feature-design-spec.mjs";
+import { build as lawyerReviewRequest } from "./22-lawyer-review-request.mjs";
 
 const builders = [
   reference,
@@ -39,6 +40,7 @@ const builders = [
   designUxAppendix,
   revisionCountingAppendix,
   featureDesignSpec,
+  lawyerReviewRequest,
 ];
 
 export function buildDocuments(input) {

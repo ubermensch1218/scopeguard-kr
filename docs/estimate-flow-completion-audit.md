@@ -16,7 +16,7 @@
 | 누락 항목별 수정 버튼 | `assets/app.js`의 `renderWriterChecks()`, `focusPanelField()` |
 | 제품 분석용 입력 로그 | `assets/app.js`의 `trackEvent()`, `window.scopeguardEventLog`, `docs/event-schema.md` |
 | 이벤트 스키마 샘플 | `data/event-schema.sample.json` |
-| 기존 계약문서 ZIP 유지 | `npm run build:docs`로 기본 17개 DOCX, 14개 XLSX, ZIP 생성 |
+| 기존 계약문서 ZIP 유지 | `npm run build:docs`로 기본 18개 DOCX, 14개 XLSX, ZIP 생성 |
 
 ## Verification commands
 

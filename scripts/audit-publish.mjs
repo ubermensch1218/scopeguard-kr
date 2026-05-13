@@ -75,7 +75,7 @@ const generatedBlocklist = [
 const samples = [
   {
     input: "data/contract-input.sample.json",
-    expectedDocx: 19,
+    expectedDocx: 20,
     expectedXlsx: 16,
     optional: {
       "16_선택별첨_디자인_UX_수정범위.docx": true,
@@ -88,7 +88,7 @@ const samples = [
   },
   {
     input: "data/contract-input.design.sample.json",
-    expectedDocx: 19,
+    expectedDocx: 20,
     expectedXlsx: 16,
     optional: {
       "16_선택별첨_디자인_UX_수정범위.docx": true,
@@ -101,7 +101,7 @@ const samples = [
   },
   {
     input: "data/contract-input.ops.sample.json",
-    expectedDocx: 17,
+    expectedDocx: 18,
     expectedXlsx: 14,
     optional: {
       "16_선택별첨_디자인_UX_수정범위.docx": false,
@@ -142,6 +142,7 @@ const generatedContentRequirements = [
   ["16_선택별첨_디자인_UX_수정범위.docx", ["사례별 분류표", "입력해야 할 기준"]],
   ["17_선택별첨_수정횟수_산정표.docx", ["수정 1회", "산정표"]],
   ["18_기능별_구현_디자인_명세서.docx", ["진입점", "디자인 요건 충족 여부", "디자인 플로우", "Mermaid", "최종 화면", "최종 결과", "화면/결과 검수 연결"]],
+  ["22_변호사_검토_요청서.docx", ["전달 패키지", "NDA/IP 집중 검토", "21_계약서_리스크_검토표.xlsx", "회신 형식"]],
 ];
 
 const generatedWorkbookRequirements = [
@@ -186,6 +187,7 @@ const documentModuleSlugs = [
   "19-start-material-confirmation",
   "20-acceptance-run-log",
   "21-contract-risk-review",
+  "22-lawyer-review-request",
 ];
 
 const syntaxTargets = [
@@ -308,10 +310,10 @@ function checkSkillProof() {
   const expectations = [
     [".codex/skills/sw-contract-scopeguard/SKILL.md", ["orchestrator", "DOCX/XLSX", "references/documents/index.md", "입증"]],
     [".claude/skills/sw-contract-scopeguard/SKILL.md", ["orchestrator", "DOCX/XLSX", "references/documents/index.md", "입증"]],
-    [".codex/skills/sw-contract-scopeguard/references/document-writing-recipes.md", ["DOCX/XLSX", "입증 기준", "21 | 계약서 리스크 검토표"]],
-    [".claude/skills/sw-contract-scopeguard/references/document-writing-recipes.md", ["DOCX/XLSX", "입증 기준", "21 | 계약서 리스크 검토표"]],
-    [".codex/skills/sw-contract-scopeguard/references/documents/index.md", ["Document Modules", "orchestrator skill", "21-contract-risk-review"]],
-    [".claude/skills/sw-contract-scopeguard/references/documents/index.md", ["Document Modules", "orchestrator skill", "21-contract-risk-review"]],
+    [".codex/skills/sw-contract-scopeguard/references/document-writing-recipes.md", ["DOCX/XLSX", "입증 기준", "22 | 변호사 검토 요청서"]],
+    [".claude/skills/sw-contract-scopeguard/references/document-writing-recipes.md", ["DOCX/XLSX", "입증 기준", "22 | 변호사 검토 요청서"]],
+    [".codex/skills/sw-contract-scopeguard/references/documents/index.md", ["Document Modules", "orchestrator skill", "22-lawyer-review-request"]],
+    [".claude/skills/sw-contract-scopeguard/references/documents/index.md", ["Document Modules", "orchestrator skill", "22-lawyer-review-request"]],
     ["docs/skill-proof.md", ["DOCX 생성", "XLSX 생성", "양식 필수 내용"]],
   ];
   for (const [target, terms] of expectations) {

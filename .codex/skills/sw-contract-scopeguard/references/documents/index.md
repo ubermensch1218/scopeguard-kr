@@ -28,4 +28,4 @@
 | 19 | `19-start-material-confirmation` | 착수자료 확정표 | XLSX |
 | 20 | `20-acceptance-run-log` | 검수실행 기록표 | XLSX |
 | 21 | `21-contract-risk-review` | 계약서 리스크 검토표 | XLSX |
-
+| 22 | `22-lawyer-review-request` | 변호사 검토 요청서 | DOCX |
