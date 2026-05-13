@@ -6,16 +6,21 @@ SW 외주개발계약에서 반복되는 과업범위, 검수, 수정횟수, 변
 
 `scopeguard-kr`는 견적 row, 전제조건, 완수 조건, 테스트 조건, 부수 항목을 입력받고 그 기준을 계약서 본문, 부속서류, XLSX 체크표에 반영합니다. 법률 자문, 공증, 소송 자동화, 판결 예측을 하지 않습니다.
 
+![Scopeguard dispute hotspots](assets/readme/dispute-hotspots.svg)
+
 ## At A Glance
 
-| 항목 | 내용 |
+| 질문 | 답 |
 |---|---|
-| 목표 | 계약 전후의 모호한 합의 기준을 문서와 표로 고정 |
-| 주요 사용자 | 발주자, 수급자, PM, 디자이너, 개발사, 실무 검토자 |
-| 핵심 입력 | 견적 row, 요구사항 ID, 기능별 화면/결과, 검수 기준 |
-| 주요 출력 | DOCX 계약문서, XLSX 체크표, ZIP 패키지 |
-| 우선 사용 방식 | Claude/Codex Skill 기반 작성 보조 |
-| 공개 경계 | 실제 계약 입력값, 업로드 원본, 생성 파일, 환경변수는 저장소에 올리지 않음 |
+| 무엇을 만드나 | SW 개발용역 계약서 초안과 부속 DOCX/XLSX 패키지 |
+| 누가 쓰나 | 발주자, 수급자, PM, 디자이너, 개발사, 실무 검토자 |
+| 핵심 입력은 | 견적 row, 요구사항 ID, 완료 조건, 테스트 조건, 착수자료 상태 |
+| 핵심 출력은 | 계약서 초안, 검수기준표, 변경요청서, 수정요청서, 리스크 검토표, 변호사 검토 요청서 |
+| 공개 경계는 | 실제 계약 입력값, 업로드 원본, 생성 파일, 환경변수는 저장소에 올리지 않음 |
+
+## How It Works
+
+![Scopeguard document flow](assets/readme/document-flow.svg)
 
 ## Why
 
@@ -31,9 +36,13 @@ SW 외주개발계약에서 반복되는 과업범위, 검수, 수정횟수, 변
 | 대금 지급 조건이 산출물/검수와 끊김 | 대금 마일스톤 지급표 |
 | 소스코드와 사전보유자산 귀속이 모호함 | 권리귀속/소스코드 인도목록 |
 
+더 자세한 분쟁 지점은 [`docs/dispute-hotspots.md`](docs/dispute-hotspots.md)에 정리했습니다.
+
 ## What It Creates
 
 문서는 성격에 따라 나눕니다. 읽고 승인하는 문서는 DOCX, 행 단위로 확인하는 긴 표는 XLSX를 우선합니다.
+
+![Scopeguard review package](assets/readme/review-package.svg)
 
 | 구분 | 산출물 | 형식 |
 |---|---|---|
@@ -227,6 +236,7 @@ GitHub에는 소스, 템플릿, 익명화된 샘플만 올립니다.
 관련 문서:
 
 - [`docs/roadmap.md`](docs/roadmap.md)
+- [`docs/dispute-hotspots.md`](docs/dispute-hotspots.md)
 - [`docs/lawyer-participation.md`](docs/lawyer-participation.md)
 - [`docs/lawyer-review-request.md`](docs/lawyer-review-request.md)
 - [`docs/stakeholder-needs.md`](docs/stakeholder-needs.md)

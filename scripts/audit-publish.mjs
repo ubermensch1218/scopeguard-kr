@@ -262,7 +262,7 @@ function listJsonTargets() {
 }
 
 function listSourceScanTargets() {
-  const allowed = new Set([".css", ".html", ".js", ".json", ".md", ".mjs", ".txt", ".yaml", ".yml", ""]);
+  const allowed = new Set([".css", ".html", ".js", ".json", ".md", ".mjs", ".svg", ".txt", ".yaml", ".yml", ""]);
   return walk(root).filter((file) => {
     if (file === selfPath) return false;
     if (file.startsWith("output/")) return false;
