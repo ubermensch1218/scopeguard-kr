@@ -51,9 +51,9 @@ function cellXml(value, header = false) {
 }
 
 function tableXml(block) {
-  const headerRow = `<w:tr>${block.headers.map((item) => cellXml(item, true)).join("")}</w:tr>`;
+  const headerRow = `<w:tr><w:trPr><w:tblHeader/><w:cantSplit/></w:trPr>${block.headers.map((item) => cellXml(item, true)).join("")}</w:tr>`;
   const bodyRows = block.rows
-    .map((row) => `<w:tr>${row.map((item) => cellXml(item)).join("")}</w:tr>`)
+    .map((row) => `<w:tr><w:trPr><w:cantSplit/></w:trPr>${row.map((item) => cellXml(item)).join("")}</w:tr>`)
     .join("");
   return `<w:tbl>
     <w:tblPr>
