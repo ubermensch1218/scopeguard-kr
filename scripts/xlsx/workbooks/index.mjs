@@ -120,6 +120,17 @@ function riskReviewRows(input) {
   ];
 }
 
+function expertReviewRows() {
+  return [
+    header("검토 ID", "대상 문서", "대상 조항/표 항목", "위험도", "문제", "제안 문구", "반드시 지킬 선", "양보 가능 조건", "처리 상태"),
+    row("LEGAL-001", "계약서", "검수/반려/승인간주", "상 / 중 / 하", "", "", "", "", "미요청 / 요청 / 반영 / 보류"),
+    row("LEGAL-002", "계약서", "하자/무상수정/변경요청", "상 / 중 / 하", "", "", "", "", "미요청 / 요청 / 반영 / 보류"),
+    row("LEGAL-003", "권리귀속/소스코드 인도목록", "사전보유자산/오픈소스/외부 API", "상 / 중 / 하", "", "", "", "", "미요청 / 요청 / 반영 / 보류"),
+    row("LEGAL-004", "개인정보/보안 요구사항", "위탁/재위탁/삭제/반환", "상 / 중 / 하", "", "", "", "", "미요청 / 요청 / 반영 / 보류"),
+    row("LEGAL-005", "대금 마일스톤 지급표", "지급기한/중도해지/정산", "상 / 중 / 하", "", "", "", "", "미요청 / 요청 / 반영 / 보류"),
+  ];
+}
+
 export function buildWorkbooks(input) {
   const ctx = createDocxContext(input);
   const optional = ctx.optionalAppendices;
@@ -285,6 +296,7 @@ export function buildWorkbooks(input) {
       file: "21_계약서_리스크_검토표.xlsx",
       sheets: [
         { name: "리스크 검토", rows: riskReviewRows(input) },
+        { name: "전문가 검토 회수", rows: expertReviewRows() },
         { name: "누락 조항", rows: [
           header("조항/항목", "현재 상태", "위험도", "보완 문구 방향", "처리 상태"),
           row("착수자료 확정", "확인 필요", "중", "기능별 자료 확정 전 착수 보류", "미처리 / 처리 / 제외"),
