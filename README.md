@@ -226,6 +226,7 @@ GitHub에는 소스, 템플릿, 익명화된 샘플만 올립니다.
 
 - [`docs/roadmap.md`](docs/roadmap.md)
 - [`docs/lawyer-participation.md`](docs/lawyer-participation.md)
+- [`docs/lawyer-review-request.md`](docs/lawyer-review-request.md)
 - [`docs/stakeholder-needs.md`](docs/stakeholder-needs.md)
 - [`docs/pr-review-checklist.md`](docs/pr-review-checklist.md)
 
