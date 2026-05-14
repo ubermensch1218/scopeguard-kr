@@ -180,7 +180,7 @@ function risk(text) {
 function table(rows) {
   return {
     kind: "table",
-    text: htmlTable(rows),
+    text: tsvTable(rows),
     markdown: markdownTable(rows),
   };
 }
@@ -229,6 +229,76 @@ fn hwp<T>(result: Result<T, rhwp::error::HwpError>) -> Result<T, Box<dyn std::er
     result.map_err(|e| format!("{e}").into())
 }
 
+fn insert_table_from_tsv(
+    core: &mut rhwp::document_core::DocumentCore,
+    para_idx: usize,
+    table_tsv: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let rows: Vec<Vec<&str>> = table_tsv
+        .lines()
+        .map(|row| row.split('\\t').collect())
+        .collect();
+    if rows.is_empty() {
+        return Ok(());
+    }
+
+    let col_count = rows.iter().map(|row| row.len()).max().unwrap_or(0);
+    if col_count == 0 {
+        return Ok(());
+    }
+
+    hwp(core.apply_para_format_native(
+        0,
+        para_idx,
+        r##"{"alignment":"left","lineSpacing":140,"marginLeft":0,"marginRight":0,"indent":0,"spacingBefore":0,"spacingAfter":0}"##,
+    ))?;
+    hwp(core.create_table_native(
+        0,
+        para_idx,
+        0,
+        rows.len() as u16,
+        col_count as u16,
+    ))?;
+
+    for (row_idx, row) in rows.iter().enumerate() {
+        for col_idx in 0..col_count {
+            let cell_text = row.get(col_idx).copied().unwrap_or("");
+            if cell_text.is_empty() {
+                continue;
+            }
+
+            let cell_idx = row_idx * col_count + col_idx;
+            hwp(core.insert_text_in_cell_native(
+                0,
+                para_idx,
+                0,
+                cell_idx,
+                0,
+                0,
+                cell_text,
+            ))?;
+
+            let char_json = if row_idx == 0 {
+                r##"{"bold":true,"textColor":"#1F4E79"}"##
+            } else {
+                r##"{"bold":false,"textColor":"#111111"}"##
+            };
+            hwp(core.apply_char_format_in_cell_native(
+                0,
+                para_idx,
+                0,
+                cell_idx,
+                0,
+                0,
+                cell_text.chars().count(),
+                char_json,
+            ))?;
+        }
+    }
+
+    Ok(())
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
     if args.len() != 2 {
@@ -251,7 +321,9 @@ ${rustLines}
             hwp(core.insert_paragraph_native(0, para_idx))?;
         }
         if item.kind == "table" {
-            hwp(core.paste_html_native(0, para_idx, 0, item.text))?;
+            insert_table_from_tsv(&mut core, para_idx, item.text)?;
+            para_idx += 2;
+            continue;
         } else if !item.text.is_empty() {
             hwp(core.insert_text_native(0, para_idx, 0, item.text))?;
             apply_line_style(&mut core, para_idx, item)?;
@@ -335,26 +407,15 @@ fn apply_line_style(
 }
 
 function rustString(value) {
-  return `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"').replaceAll("\n", "\\n")}"`;
+  return `"${value
+    .replaceAll("\\", "\\\\")
+    .replaceAll('"', '\\"')
+    .replaceAll("\t", "\\t")
+    .replaceAll("\n", "\\n")}"`;
 }
 
-function htmlTable(rows) {
-  const widths = ["60pt", "150pt", "215pt"];
-  const trs = rows
-    .map((row, rowIndex) => {
-      const tag = rowIndex === 0 ? "th" : "td";
-      const cells = row
-        .map((cell, columnIndex) => {
-          const width = widths[columnIndex] || "140pt";
-          const background = rowIndex === 0 ? "background-color:#D9EAF7;" : "";
-          const weight = rowIndex === 0 ? "font-weight:bold;" : "";
-          return `<${tag} style="width:${width};height:24pt;border:0.7pt solid #6B7280;padding:5pt;vertical-align:top;${background}${weight}">${escapeHtml(cell)}</${tag}>`;
-        })
-        .join("");
-      return `<tr>${cells}</tr>`;
-    })
-    .join("");
-  return `<table style="border-collapse:collapse;padding:0pt;margin:0pt;">${trs}</table>`;
+function tsvTable(rows) {
+  return rows.map((row) => row.join("\t")).join("\n");
 }
 
 function markdownTable(rows) {
@@ -364,14 +425,6 @@ function markdownTable(rows) {
     `| ${head.map(() => "---").join(" | ")} |`,
     ...body.map((row) => `| ${row.map(escapeMarkdownCell).join(" | ")} |`),
   ].join("\n");
-}
-
-function escapeHtml(value) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
 }
 
 function escapeMarkdownCell(value) {
