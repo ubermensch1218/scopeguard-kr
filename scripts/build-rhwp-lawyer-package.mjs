@@ -38,11 +38,11 @@ const docLines = [
   bullet("개인정보/보안 요구사항: 처리위탁, 재위탁, 접근권한, 보관기간, 삭제/반환, 침해 통지"),
   bullet("NDA/IP 쟁점: 비밀정보 범위, 사용목적 제한, 잔존지식, 피드백 권리, 공동개발 결과물 귀속"),
   table([
-    ["우선", "계약서/자료", "변호사 검토 쟁점"],
-    ["P0", "SW 개발용역계약서", "검수, 변경요청, 대금, 지체상금, 손해배상 한도"],
-    ["P0", "권리귀속/소스코드 인도목록", "전용 산출물, 사전보유자산, 오픈소스, 포트폴리오 사용"],
-    ["P0", "NDA/IP 쟁점", "비밀정보 범위, 목적 외 사용, 잔존지식, 피드백 권리"],
-    ["P0", "개인정보/보안 요구사항", "처리위탁, 재위탁, 접근권한, 삭제/반환, 침해 통지"],
+    ["우선", "자료", "검토 포인트"],
+    ["P0", "용역계약서", "검수/변경/대금/배상"],
+    ["P0", "권리귀속표", "산출물/IP/오픈소스"],
+    ["P0", "NDA/IP", "비밀정보/잔존지식/피드백"],
+    ["P0", "개인정보/보안", "위탁/접근/삭제/침해"],
   ]),
   line("spacer", ""),
 
@@ -57,10 +57,10 @@ const docLines = [
   risk("대금과 마일스톤 연결 끊김: 산출물, 검수, 세금계산서, 잔금 지급 조건이 서로 다른 기준으로 움직일 수 있습니다."),
   table([
     ["분쟁 지점", "왜 커지는가", "잠그는 자료"],
-    ["검수 기준 부재", "완료, 하자, 선호 변경이 섞임", "검수기준표, 검수실행 기록표"],
-    ["수정/변경요청 혼재", "무상인지 유상인지 뒤늦게 다툼", "수정요청서, 변경요청서"],
-    ["구두 요청", "회의 발언이 계약 범위처럼 주장됨", "회의록 승인서, 변경요청서"],
-    ["권리/NDA 경계", "소스코드, 피드백, 공동개발 결과물 귀속이 흔들림", "권리귀속표, NDA/IP 검토 항목"],
+    ["검수", "완료/하자/선호 변경 혼재", "검수기준표"],
+    ["수정/변경", "무상/유상 경계 다툼", "수정/변경요청서"],
+    ["구두 요청", "발언이 범위처럼 주장됨", "승인 회의록"],
+    ["권리/NDA", "IP/피드백 귀속 흔들림", "권리귀속표"],
   ]),
   line("spacer", ""),
 
@@ -97,10 +97,10 @@ const docLines = [
   bullet("리스크 검토표: 조항별 위험도, 문제, 제안 문구, 협상 마지노선, 양보 가능 조건"),
   table([
     ["첨부 묶음", "포함 파일", "보내기 전 확인"],
-    ["계약 원문", "계약서, 수정안, 별첨, 약관 링크", "최신본과 날짜 표시"],
-    ["과업 범위", "제안서, 견적서, RFP, 기능정의서", "요구사항 ID와 견적 row 연결"],
-    ["검수/납품", "검수기준표, 테스트 시나리오, 납품확인서", "반려 사유와 증빙 방식"],
-    ["권리/보안", "권리귀속표, 개인정보/보안 요구사항", "API 키와 계정 비밀번호 제거"],
+    ["계약 원문", "계약서/수정안/별첨", "최신본/날짜"],
+    ["과업 범위", "제안서/RFP/기능정의", "ID-견적 연결"],
+    ["검수/납품", "기준표/시나리오/확인서", "반려 사유"],
+    ["권리/보안", "권리표/보안 요구사항", "키/비밀번호 제거"],
   ]),
   line("spacer", ""),
 
@@ -246,18 +246,25 @@ fn insert_table_from_tsv(
     if col_count == 0 {
         return Ok(());
     }
+    let col_widths = if col_count == 3 {
+        Some(vec![8500u32, 13500u32, 19900u32])
+    } else {
+        None
+    };
 
     hwp(core.apply_para_format_native(
         0,
         para_idx,
         r##"{"alignment":"left","lineSpacing":140,"marginLeft":0,"marginRight":0,"indent":0,"spacingBefore":0,"spacingAfter":0}"##,
     ))?;
-    hwp(core.create_table_native(
+    hwp(core.create_table_ex_native(
         0,
         para_idx,
         0,
         rows.len() as u16,
         col_count as u16,
+        true,
+        col_widths.as_deref(),
     ))?;
 
     for (row_idx, row) in rows.iter().enumerate() {
@@ -279,9 +286,9 @@ fn insert_table_from_tsv(
             ))?;
 
             let char_json = if row_idx == 0 {
-                r##"{"bold":true,"textColor":"#1F4E79"}"##
+                r##"{"fontSize":900,"bold":true,"textColor":"#1F4E79"}"##
             } else {
-                r##"{"bold":false,"textColor":"#111111"}"##
+                r##"{"fontSize":900,"bold":false,"textColor":"#111111"}"##
             };
             hwp(core.apply_char_format_in_cell_native(
                 0,
@@ -322,7 +329,7 @@ ${rustLines}
         }
         if item.kind == "table" {
             insert_table_from_tsv(&mut core, para_idx, item.text)?;
-            para_idx += 2;
+            para_idx += 1;
             continue;
         } else if !item.text.is_empty() {
             hwp(core.insert_text_native(0, para_idx, 0, item.text))?;
