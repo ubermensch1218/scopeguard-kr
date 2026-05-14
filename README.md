@@ -46,15 +46,15 @@ SW 외주개발계약에서 반복되는 과업범위, 검수, 수정횟수, 변
 
 | 구분 | 산출물 | 형식 |
 |---|---|---|
-| 계약 기준 | 계약서 초안, RFP/과업내용서, 입력값 요약표 | DOCX, XLSX |
-| 범위·견적 | 견적산정표, 기능별 구현·디자인 명세서, 착수자료 확정표 | DOCX, XLSX |
-| 검수·납품 | 검수기준표, 검수실행 기록표, 납품확인서 | DOCX, XLSX |
-| 요청 처리 | 수정요청서, 변경요청서, 하자신고서, 회의록 승인서 | DOCX, XLSX |
-| 비용·운영 | 대금 마일스톤 지급표, 운영비/API/계정 인수인계서 | DOCX, XLSX |
-| 권리·보안 | 권리귀속/소스코드 인도목록, 개인정보/보안 요구사항 | DOCX |
-| 합의·리스크 | 공급자/수요자 합의표, 계약서 리스크 검토표 | DOCX, XLSX |
-| 선택 별첨 | 디자인/UX 수정범위, 수정횟수 산정표 | DOCX, XLSX |
-| 전달·검토 | 변호사 검토 요청서, 계약서 리스크 검토표 | DOCX, XLSX |
+| 계약 기준 | 계약서 초안, RFP/과업내용서, 입력값 요약표 | DOCX, HWP, XLSX |
+| 범위·견적 | 견적산정표, 기능별 구현·디자인 명세서, 착수자료 확정표 | DOCX, HWP, XLSX |
+| 검수·납품 | 검수기준표, 검수실행 기록표, 납품확인서 | DOCX, HWP, XLSX |
+| 요청 처리 | 수정요청서, 변경요청서, 하자신고서, 회의록 승인서 | DOCX, HWP, XLSX |
+| 비용·운영 | 대금 마일스톤 지급표, 운영비/API/계정 인수인계서 | DOCX, HWP, XLSX |
+| 권리·보안 | 권리귀속/소스코드 인도목록, 개인정보/보안 요구사항 | DOCX, HWP |
+| 합의·리스크 | 공급자/수요자 합의표, 계약서 리스크 검토표 | DOCX, HWP, XLSX |
+| 선택 별첨 | 디자인/UX 수정범위, 수정횟수 산정표 | DOCX, HWP, XLSX |
+| 전달·검토 | 변호사 검토 요청서, 계약서 리스크 검토표 | DOCX, HWP, XLSX |
 
 기본 샘플 기준 생성 결과:
 
@@ -62,10 +62,15 @@ SW 외주개발계약에서 반복되는 과업범위, 검수, 수정횟수, 변
 output/
   변호사_검토_요청서_정리본.hwp
   22_변호사_검토_요청서.docx
+  22_변호사_검토_요청서.hwp
   03_SW_개발용역계약서_초안.docx
+  03_SW_개발용역계약서_초안.hwp
   04_검수기준표.docx
+  04_검수기준표.hwp
   15_견적산정표.docx
+  15_견적산정표.hwp
   18_기능별_구현_디자인_명세서.docx
+  18_기능별_구현_디자인_명세서.hwp
   19_착수자료_확정표.xlsx
   20_검수실행_기록표.xlsx
   21_계약서_리스크_검토표.xlsx
@@ -92,9 +97,10 @@ node scripts/build-docx-package.mjs --input data/contract-input.design.sample.js
 node scripts/build-docx-package.mjs --input data/contract-input.ops.sample.json
 ```
 
-변호사에게 바로 보낼 정리본은 로컬 `rhwp` 저장소를 사용해 HWP로 생성합니다. 기본 경로는 `../rhwp`이며, 다른 위치에 있으면 `RHWP_REPO`로 지정합니다.
+`npm run build:docs`는 각 DOCX 문서와 같은 이름의 HWP 문서도 함께 생성합니다. 일반 계약문서 HWP와 변호사 전달 정리본 HWP는 로컬 `rhwp` 저장소를 사용합니다. 기본 경로는 `../rhwp`이며, 다른 위치에 있으면 `RHWP_REPO`로 지정합니다.
 
 ```bash
+RHWP_REPO=/path/to/rhwp npm run build:docs
 RHWP_REPO=/path/to/rhwp npm run build:lawyer:hwp
 ```
 
@@ -200,7 +206,7 @@ data/
   question-overlays.sample.json
 
 scripts/
-  build-docx-package.mjs  # DOCX/XLSX 패키징과 ZIP 생성
+  build-docx-package.mjs  # DOCX/HWP/XLSX 패키징과 ZIP 생성
   audit-publish.mjs       # 공개 전 샘플 빌드와 문자열 점검
   check-data.mjs          # 필수 파일 점검
   docx/

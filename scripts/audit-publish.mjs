@@ -368,6 +368,10 @@ function listGeneratedDocx() {
   return fs.readdirSync(outDir).filter((file) => file.endsWith(".docx")).sort();
 }
 
+function listGeneratedHwp() {
+  return fs.readdirSync(outDir).filter((file) => file.endsWith(".hwp")).sort();
+}
+
 function listGeneratedXlsx() {
   return fs.readdirSync(outDir).filter((file) => file.endsWith(".xlsx")).sort();
 }
@@ -445,8 +449,9 @@ function checkGeneratedWorkbookRequirements(samplePath, xlsxFiles) {
   }
 }
 
-function checkZipAndFiles(samplePath, docxFiles, xlsxFiles, expectedDocx, expectedXlsx) {
+function checkZipAndFiles(samplePath, docxFiles, hwpFiles, xlsxFiles, expectedDocx, expectedXlsx) {
   assert(docxFiles.length === expectedDocx, `${samplePath} docx count ${docxFiles.length}/${expectedDocx}`);
+  assert(hwpFiles.length === expectedDocx, `${samplePath} hwp count ${hwpFiles.length}/${expectedDocx}`);
   assert(xlsxFiles.length === expectedXlsx, `${samplePath} xlsx count ${xlsxFiles.length}/${expectedXlsx}`);
 
   for (const file of docxFiles) {
@@ -457,6 +462,15 @@ function checkZipAndFiles(samplePath, docxFiles, xlsxFiles, expectedDocx, expect
     }
   }
   pass(`docx integrity ${samplePath}`);
+
+  for (const file of hwpFiles) {
+    try {
+      run("rhwp", ["info", path.join(outDir, file)]);
+    } catch (error) {
+      fail(`invalid hwp ${file} for ${samplePath}: ${error.stderr || error.message}`);
+    }
+  }
+  pass(`hwp integrity ${samplePath}`);
 
   for (const file of xlsxFiles) {
     try {
@@ -477,6 +491,8 @@ function checkZipAndFiles(samplePath, docxFiles, xlsxFiles, expectedDocx, expect
 
   const entries = packageEntries(packagePath).filter((entry) => entry.endsWith(".docx"));
   assert(entries.length === expectedDocx, `${samplePath} zip docx count ${entries.length}/${expectedDocx}`);
+  const hwpEntries = packageEntries(packagePath).filter((entry) => entry.endsWith(".hwp"));
+  assert(hwpEntries.length === expectedDocx, `${samplePath} zip hwp count ${hwpEntries.length}/${expectedDocx}`);
   const workbookEntries = packageEntries(packagePath).filter((entry) => entry.endsWith(".xlsx"));
   assert(workbookEntries.length === expectedXlsx, `${samplePath} zip xlsx count ${workbookEntries.length}/${expectedXlsx}`);
 }
@@ -499,9 +515,15 @@ function buildSample(sample) {
 
   const input = parseInput(sample.input);
   const docxFiles = listGeneratedDocx();
+  const hwpFiles = listGeneratedHwp();
   const xlsxFiles = listGeneratedXlsx();
-  checkZipAndFiles(sample.input, docxFiles, xlsxFiles, sample.expectedDocx, sample.expectedXlsx);
+  checkZipAndFiles(sample.input, docxFiles, hwpFiles, xlsxFiles, sample.expectedDocx, sample.expectedXlsx);
   checkOptionalDocs(sample.input, docxFiles, sample.optional);
+  checkOptionalDocs(
+    sample.input,
+    hwpFiles,
+    Object.fromEntries(Object.entries(sample.optional).map(([file, expected]) => [file.replace(/\.docx$/u, ".hwp"), expected])),
+  );
   checkOptionalDocs(sample.input, xlsxFiles, sample.optionalXlsx);
   const generatedText = checkGeneratedText(sample.input, docxFiles, xlsxFiles);
   checkEstimateIds(sample.input, input, generatedText);
