@@ -193,6 +193,7 @@ const documentModuleSlugs = [
 const syntaxTargets = [
   "assets/app.js",
   "scripts/build-docx-package.mjs",
+  "scripts/build-rhwp-lawyer-package.mjs",
   "scripts/check-data.mjs",
   "scripts/audit-publish.mjs",
 ];

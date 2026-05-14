@@ -7,6 +7,7 @@
     "dev": "python3 -m http.server 4173",
     "check": "node scripts/check-data.mjs",
     "build:docs": "node scripts/build-docx-package.mjs",
+    "build:lawyer:hwp": "node scripts/build-rhwp-lawyer-package.mjs",
     "audit:publish": "node scripts/audit-publish.mjs"
   },
   "keywords": [

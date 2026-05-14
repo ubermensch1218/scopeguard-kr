@@ -60,6 +60,8 @@ SW 외주개발계약에서 반복되는 과업범위, 검수, 수정횟수, 변
 
 ```text
 output/
+  변호사_검토_요청서_정리본.hwp
+  변호사_검토_요청서_정리본.hwpx
   22_변호사_검토_요청서.docx
   03_SW_개발용역계약서_초안.docx
   04_검수기준표.docx
@@ -68,6 +70,7 @@ output/
   19_착수자료_확정표.xlsx
   20_검수실행_기록표.xlsx
   21_계약서_리스크_검토표.xlsx
+  scopeguard_lawyer_review_rhwp_package.zip
   scopeguard_sw_contract_docs.zip
 ```
 
@@ -79,6 +82,7 @@ output/
 npm run check
 npm run audit:publish
 npm run build:docs
+npm run build:lawyer:hwp
 ```
 
 입력 파일을 지정할 수도 있습니다.
@@ -87,6 +91,12 @@ npm run build:docs
 node scripts/build-docx-package.mjs --input data/contract-input.sample.json
 node scripts/build-docx-package.mjs --input data/contract-input.design.sample.json
 node scripts/build-docx-package.mjs --input data/contract-input.ops.sample.json
+```
+
+변호사에게 바로 보낼 정리본은 로컬 `rhwp` 저장소를 사용해 HWP/HWPX로 생성합니다. 기본 경로는 `../rhwp`이며, 다른 위치에 있으면 `RHWP_REPO`로 지정합니다.
+
+```bash
+RHWP_REPO=/path/to/rhwp npm run build:lawyer:hwp
 ```
 
 정적 웹 입력 화면은 아래 명령으로 확인합니다.
