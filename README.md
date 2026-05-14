@@ -61,7 +61,6 @@ SW 외주개발계약에서 반복되는 과업범위, 검수, 수정횟수, 변
 ```text
 output/
   변호사_검토_요청서_정리본.hwp
-  변호사_검토_요청서_정리본.hwpx
   22_변호사_검토_요청서.docx
   03_SW_개발용역계약서_초안.docx
   04_검수기준표.docx
@@ -93,7 +92,7 @@ node scripts/build-docx-package.mjs --input data/contract-input.design.sample.js
 node scripts/build-docx-package.mjs --input data/contract-input.ops.sample.json
 ```
 
-변호사에게 바로 보낼 정리본은 로컬 `rhwp` 저장소를 사용해 HWP/HWPX로 생성합니다. 기본 경로는 `../rhwp`이며, 다른 위치에 있으면 `RHWP_REPO`로 지정합니다.
+변호사에게 바로 보낼 정리본은 로컬 `rhwp` 저장소를 사용해 HWP로 생성합니다. 기본 경로는 `../rhwp`이며, 다른 위치에 있으면 `RHWP_REPO`로 지정합니다.
 
 ```bash
 RHWP_REPO=/path/to/rhwp npm run build:lawyer:hwp

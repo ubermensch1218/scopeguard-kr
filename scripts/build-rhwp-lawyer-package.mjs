@@ -17,7 +17,7 @@ const generatedAt = new Intl.DateTimeFormat("ko-KR", {
 
 const sourceMd = path.join(outputDir, "변호사_검토_요청서_정리본.md");
 const outputHwp = path.join(outputDir, "변호사_검토_요청서_정리본.hwp");
-const outputHwpx = path.join(outputDir, "변호사_검토_요청서_정리본.hwpx");
+const staleHwpx = path.join(outputDir, "변호사_검토_요청서_정리본.hwpx");
 const outputZip = path.join(outputDir, "scopeguard_lawyer_review_rhwp_package.zip");
 const riskWorkbook = path.join(outputDir, "21_계약서_리스크_검토표.xlsx");
 
@@ -37,6 +37,13 @@ const docLines = [
   bullet("권리귀속/소스코드 인도목록: 전용 산출물, 사전보유자산, 오픈소스, 외부 API, 포트폴리오 사용"),
   bullet("개인정보/보안 요구사항: 처리위탁, 재위탁, 접근권한, 보관기간, 삭제/반환, 침해 통지"),
   bullet("NDA/IP 쟁점: 비밀정보 범위, 사용목적 제한, 잔존지식, 피드백 권리, 공동개발 결과물 귀속"),
+  table([
+    ["우선", "계약서/자료", "변호사 검토 쟁점"],
+    ["P0", "SW 개발용역계약서", "검수, 변경요청, 대금, 지체상금, 손해배상 한도"],
+    ["P0", "권리귀속/소스코드 인도목록", "전용 산출물, 사전보유자산, 오픈소스, 포트폴리오 사용"],
+    ["P0", "NDA/IP 쟁점", "비밀정보 범위, 목적 외 사용, 잔존지식, 피드백 권리"],
+    ["P0", "개인정보/보안 요구사항", "처리위탁, 재위탁, 접근권한, 삭제/반환, 침해 통지"],
+  ]),
   line("spacer", ""),
 
   line("h1", "2. 분쟁이 더 생기기 쉬운 구석"),
@@ -48,6 +55,13 @@ const docLines = [
   risk("운영비와 계정 인수: API, 모델, 도메인, 문자, 클라우드, 관리자 계정 비용과 장애 책임이 납품 뒤에도 남습니다."),
   risk("개인정보와 고객 데이터 접근: 개발 중 접근권한, 로그, 테스트 데이터, 삭제/반환 책임이 문서화되지 않으면 사고 대응이 어렵습니다."),
   risk("대금과 마일스톤 연결 끊김: 산출물, 검수, 세금계산서, 잔금 지급 조건이 서로 다른 기준으로 움직일 수 있습니다."),
+  table([
+    ["분쟁 지점", "왜 커지는가", "잠그는 자료"],
+    ["검수 기준 부재", "완료, 하자, 선호 변경이 섞임", "검수기준표, 검수실행 기록표"],
+    ["수정/변경요청 혼재", "무상인지 유상인지 뒤늦게 다툼", "수정요청서, 변경요청서"],
+    ["구두 요청", "회의 발언이 계약 범위처럼 주장됨", "회의록 승인서, 변경요청서"],
+    ["권리/NDA 경계", "소스코드, 피드백, 공동개발 결과물 귀속이 흔들림", "권리귀속표, NDA/IP 검토 항목"],
+  ]),
   line("spacer", ""),
 
   line("h1", "3. 변호사에게 확인받고 싶은 질문"),
@@ -81,6 +95,13 @@ const docLines = [
   bullet("권리/보안: 권리귀속표, 소스코드 인도목록, 개인정보/보안 요구사항"),
   bullet("NDA/IP: 공개 예정 자료 목록, 미공개 자산 목록, 열람자 목록, 금지할 사용 방식"),
   bullet("리스크 검토표: 조항별 위험도, 문제, 제안 문구, 협상 마지노선, 양보 가능 조건"),
+  table([
+    ["첨부 묶음", "포함 파일", "보내기 전 확인"],
+    ["계약 원문", "계약서, 수정안, 별첨, 약관 링크", "최신본과 날짜 표시"],
+    ["과업 범위", "제안서, 견적서, RFP, 기능정의서", "요구사항 ID와 견적 row 연결"],
+    ["검수/납품", "검수기준표, 테스트 시나리오, 납품확인서", "반려 사유와 증빙 방식"],
+    ["권리/보안", "권리귀속표, 개인정보/보안 요구사항", "API 키와 계정 비밀번호 제거"],
+  ]),
   line("spacer", ""),
 
   line("h1", "6. 회신 요청 형식"),
@@ -120,13 +141,13 @@ rhwp = { path = ${JSON.stringify(rhwpRepo)} }
   await mkdir(path.join(workDir, "src"));
   await writeFile(path.join(workDir, "src/main.rs"), renderRustGenerator(docLines), "utf8");
 
-  run("cargo", ["run", "--quiet", "--", outputHwp, outputHwpx], workDir, { quiet: true });
+  await rm(staleHwpx, { force: true });
+  run("cargo", ["run", "--quiet", "--", outputHwp], workDir, { quiet: true });
   await rm(outputZip, { force: true });
   const zipDir = path.join(workDir, "zip");
   await mkdir(zipDir);
   const zipEntries = [
     ["lawyer_review_request.hwp", outputHwp],
-    ["lawyer_review_request.hwpx", outputHwpx],
     ["lawyer_review_request.md", sourceMd],
   ];
   if (existsSync(riskWorkbook)) {
@@ -141,7 +162,6 @@ rhwp = { path = ${JSON.stringify(rhwpRepo)} }
 }
 
 console.log(`wrote ${path.relative(repoRoot, outputHwp)}`);
-console.log(`wrote ${path.relative(repoRoot, outputHwpx)}`);
 console.log(`wrote ${path.relative(repoRoot, sourceMd)}`);
 console.log(`wrote ${path.relative(repoRoot, outputZip)}`);
 
@@ -157,6 +177,14 @@ function risk(text) {
   return line("risk", `[위험] ${text}`);
 }
 
+function table(rows) {
+  return {
+    kind: "table",
+    text: htmlTable(rows),
+    markdown: markdownTable(rows),
+  };
+}
+
 function run(command, args, cwd, options = {}) {
   const result = spawnSync(command, args, { cwd, encoding: "utf8" });
   if (!options.quiet || result.status !== 0) {
@@ -170,7 +198,7 @@ function run(command, args, cwd, options = {}) {
 
 function toMarkdown(lines) {
   return `${lines
-    .map(({ kind, text }) => {
+    .map(({ kind, text, markdown }) => {
       if (!text) return "";
       if (kind === "title") return `# ${text}`;
       if (kind === "subtitle") return `**${text}**`;
@@ -178,6 +206,7 @@ function toMarkdown(lines) {
       if (kind === "h2") return `### ${text}`;
       if (kind === "bullet") return text.startsWith("- ") ? text : `- ${text}`;
       if (kind === "risk") return `- ${text}`;
+      if (kind === "table") return markdown;
       if (kind === "notice") return `> ${text}`;
       return text;
     })
@@ -202,13 +231,12 @@ fn hwp<T>(result: Result<T, rhwp::error::HwpError>) -> Result<T, Box<dyn std::er
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
-    if args.len() != 3 {
-        eprintln!("usage: scopeguard-rhwp-lawyer-doc <output.hwp> <output.hwpx>");
+    if args.len() != 2 {
+        eprintln!("usage: scopeguard-rhwp-lawyer-doc <output.hwp>");
         std::process::exit(2);
     }
 
     let output_hwp = &args[1];
-    let output_hwpx = &args[2];
     let lines = [
 ${rustLines}
     ];
@@ -217,22 +245,25 @@ ${rustLines}
     hwp(core.create_blank_document_native())?;
     hwp(core.begin_batch_native())?;
 
-    for (idx, item) in lines.iter().enumerate() {
-        if idx > 0 {
-            hwp(core.insert_paragraph_native(0, idx))?;
+    let mut para_idx = 0usize;
+    for item in lines.iter() {
+        if para_idx > 0 {
+            hwp(core.insert_paragraph_native(0, para_idx))?;
         }
-        if !item.text.is_empty() {
-            hwp(core.insert_text_native(0, idx, 0, item.text))?;
+        if item.kind == "table" {
+            hwp(core.paste_html_native(0, para_idx, 0, item.text))?;
+        } else if !item.text.is_empty() {
+            hwp(core.insert_text_native(0, para_idx, 0, item.text))?;
+            apply_line_style(&mut core, para_idx, item)?;
+        } else {
+            apply_line_style(&mut core, para_idx, item)?;
         }
-        apply_line_style(&mut core, idx, item)?;
+        para_idx += 1;
     }
 
     hwp(core.end_batch_native())?;
 
     if let Some(parent) = Path::new(output_hwp).parent() {
-        fs::create_dir_all(parent)?;
-    }
-    if let Some(parent) = Path::new(output_hwpx).parent() {
         fs::create_dir_all(parent)?;
     }
 
@@ -242,7 +273,6 @@ ${rustLines}
         return Err("generated HWP has no pages".into());
     }
     fs::write(output_hwp, hwp_bytes)?;
-    fs::write(output_hwpx, hwp(core.export_hwpx_native())?)?;
     Ok(())
 }
 
@@ -306,4 +336,44 @@ fn apply_line_style(
 
 function rustString(value) {
   return `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"').replaceAll("\n", "\\n")}"`;
+}
+
+function htmlTable(rows) {
+  const widths = ["60pt", "150pt", "215pt"];
+  const trs = rows
+    .map((row, rowIndex) => {
+      const tag = rowIndex === 0 ? "th" : "td";
+      const cells = row
+        .map((cell, columnIndex) => {
+          const width = widths[columnIndex] || "140pt";
+          const background = rowIndex === 0 ? "background-color:#D9EAF7;" : "";
+          const weight = rowIndex === 0 ? "font-weight:bold;" : "";
+          return `<${tag} style="width:${width};height:24pt;border:0.7pt solid #6B7280;padding:5pt;vertical-align:top;${background}${weight}">${escapeHtml(cell)}</${tag}>`;
+        })
+        .join("");
+      return `<tr>${cells}</tr>`;
+    })
+    .join("");
+  return `<table style="border-collapse:collapse;padding:0pt;margin:0pt;">${trs}</table>`;
+}
+
+function markdownTable(rows) {
+  const [head, ...body] = rows;
+  return [
+    `| ${head.map(escapeMarkdownCell).join(" | ")} |`,
+    `| ${head.map(() => "---").join(" | ")} |`,
+    ...body.map((row) => `| ${row.map(escapeMarkdownCell).join(" | ")} |`),
+  ].join("\n");
+}
+
+function escapeHtml(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function escapeMarkdownCell(value) {
+  return value.replaceAll("|", "\\|");
 }
