@@ -16,7 +16,7 @@
 | 누락 항목별 수정 버튼 | `assets/app.js`의 `renderWriterChecks()`, `focusPanelField()` |
 | 제품 분석용 입력 로그 | `assets/app.js`의 `trackEvent()`, `window.scopeguardEventLog`, `docs/event-schema.md` |
 | 이벤트 스키마 샘플 | `data/event-schema.sample.json` |
-| 기존 계약문서 ZIP 유지 | `npm run build:docs`로 기본 18개 HWP, 14개 XLSX, ZIP 생성 |
+| 기존 계약문서 ZIP 유지 | `npm run build:docs`로 차수별 ZIP과 전체 보관용 ZIP 생성 |
 
 ## Verification commands
 
@@ -26,7 +26,9 @@ node --check scripts/build-hwp-package.mjs
 node -e "JSON.parse(require('fs').readFileSync('data/event-schema.sample.json','utf8')); console.log('event json ok')"
 npm run check
 npm run build:docs
-for f in output/*.hwp output/*.xlsx; do unzip -t "$f" >/dev/null || exit 1; done; unzip -t output/scopeguard_sw_contract_docs.zip >/dev/null
+for f in output/99_전체_산출물_보관용/*.hwp; do rhwp info "$f" >/dev/null || exit 1; done
+for f in output/99_전체_산출물_보관용/*.xlsx; do unzip -t "$f" >/dev/null || exit 1; done
+unzip -t output/99_전체_산출물_보관용.zip >/dev/null
 ```
 
 ## Browser verification

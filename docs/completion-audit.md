@@ -12,11 +12,11 @@
 | 견적 row 기반 노코드 입력 UI | `index.html`의 `#estimate-rows`, `#add-estimate-row`; `assets/app.js`의 `renderEstimateRows()` |
 | 문항별 “줄이는 분쟁” 오버레이 | `index.html`의 `#overlay-list`; `assets/app.js`의 `overlayItems`, `renderOverlayList()` |
 | 누락 체크 | `index.html`의 `#writer-checks`; `assets/app.js`의 `renderWriterChecks()` |
-| 계약서 초안 HWP | `output/03_SW_개발용역계약서_초안.hwp` |
-| RFP/과업내용서 HWP | `output/02_RFP_과업내용서.hwp` |
-| 검수기준표 HWP | `output/04_검수기준표.hwp` |
-| 견적산정표 HWP/XLSX | `output/15_견적산정표.hwp`, `output/15_견적산정표.xlsx` |
-| 수정요청서/변경요청서 등 부속서류 ZIP | `output/scopeguard_sw_contract_docs.zip` |
+| 계약서 초안 HWP | `output/99_전체_산출물_보관용/03_SW_개발용역계약서_초안.hwp` |
+| RFP/과업내용서 HWP | `output/99_전체_산출물_보관용/02_RFP_과업내용서.hwp` |
+| 검수기준표 HWP | `output/99_전체_산출물_보관용/04_검수기준표.hwp` |
+| 견적산정표 HWP/XLSX | `output/99_전체_산출물_보관용/15_견적산정표.hwp`, `output/99_전체_산출물_보관용/15_견적산정표.xlsx` |
+| 수정요청서/변경요청서 등 부속서류 ZIP | `output/99_전체_산출물_보관용.zip` |
 | 견적 row의 전제조건/완수 조건/테스트 조건/부수 항목 | `data/contract-input.sample.json`의 `estimate.rows[]` |
 | 견적 row가 문서 생성에 반영 | `scripts/build-hwp-package.mjs`의 `estimateScopeRows()`, `estimatePaymentRows()`, `estimateRows()` |
 | 웹 미리보기에서 표 렌더링 | `assets/app.js`의 `renderFallbackPreview()`, `parseMarkdownTableRow()` |
@@ -30,9 +30,9 @@ node --check assets/app.js
 node --check scripts/build-hwp-package.mjs
 npm run check
 npm run build:docs
-for f in output/*.hwp; do rhwp info "$f" >/dev/null || exit 1; done
-for f in output/*.xlsx; do unzip -t "$f" >/dev/null || exit 1; done
-unzip -t output/scopeguard_sw_contract_docs.zip >/dev/null
+for f in output/99_전체_산출물_보관용/*.hwp; do rhwp info "$f" >/dev/null || exit 1; done
+for f in output/99_전체_산출물_보관용/*.xlsx; do unzip -t "$f" >/dev/null || exit 1; done
+unzip -t output/99_전체_산출물_보관용.zip >/dev/null
 ```
 
 ## Residual risks

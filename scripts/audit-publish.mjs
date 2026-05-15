@@ -2,9 +2,16 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
+import {
+  fullArchiveDirName,
+  fullArchiveZipName,
+  initialSendZipName,
+  phaseBundles,
+} from "./output-bundles.mjs";
 
 const root = path.resolve(new URL("..", import.meta.url).pathname);
 const outDir = path.join(root, "output");
+const generatedDir = path.join(outDir, fullArchiveDirName);
 const selfPath = path.relative(root, new URL(import.meta.url).pathname);
 
 const join = (...parts) => parts.join("");
@@ -124,20 +131,6 @@ const keyDocFiles = [
   "15_견적산정표.hwp",
 ];
 
-const initialSendDirName = "초기_전달용";
-const initialSendZipName = "scopeguard_initial_send_package.zip";
-const initialSendFiles = [
-  "22_변호사_검토_요청서.hwp",
-  "03_SW_개발용역계약서_초안.hwp",
-  "02_RFP_과업내용서.hwp",
-  "04_검수기준표.hwp",
-  "10_대금_마일스톤_지급표.hwp",
-  "11_권리귀속_소스코드_인도목록.hwp",
-  "13_개인정보_보안_요구사항.hwp",
-  "15_견적산정표.xlsx",
-  "21_계약서_리스크_검토표.xlsx",
-];
-
 const generatedContentRequirements = [
   ["00_참고문헌.hwp", ["계약 조항의 판단이나"]],
   ["01_입력값_요약표.hwp", ["핵심 운영 조건", "견적 row 수"]],
@@ -212,6 +205,7 @@ const syntaxTargets = [
   "scripts/build-rhwp-lawyer-package.mjs",
   "scripts/check-data.mjs",
   "scripts/audit-publish.mjs",
+  "scripts/output-bundles.mjs",
 ];
 
 const ok = [];
@@ -381,11 +375,15 @@ function parseInput(samplePath) {
 }
 
 function listGeneratedHwp() {
-  return fs.readdirSync(outDir).filter((file) => file.endsWith(".hwp")).sort();
+  return fs.existsSync(generatedDir)
+    ? fs.readdirSync(generatedDir).filter((file) => file.endsWith(".hwp")).sort()
+    : [];
 }
 
 function listGeneratedXlsx() {
-  return fs.readdirSync(outDir).filter((file) => file.endsWith(".xlsx")).sort();
+  return fs.existsSync(generatedDir)
+    ? fs.readdirSync(generatedDir).filter((file) => file.endsWith(".xlsx")).sort()
+    : [];
 }
 
 function listOutputFiles(dir = outDir, acc = []) {
@@ -403,11 +401,11 @@ function listUnexpectedLegacyWordDocs() {
 }
 
 function hwpText(file) {
-  return run("rhwp", ["dump", path.join(outDir, file)]);
+  return run("rhwp", ["dump", path.join(generatedDir, file)]);
 }
 
 function xlsxXml(file) {
-  const archive = path.join(outDir, file);
+  const archive = path.join(generatedDir, file);
   const entries = packageEntries(archive).filter((entry) => (
     entry === "xl/workbook.xml" || entry.startsWith("xl/worksheets/")
   ));
@@ -442,7 +440,7 @@ function checkEstimateIds(samplePath, input, generatedText) {
     if (!generatedText.includes(id)) fail(`missing estimate row id ${id} in generated docs for ${samplePath}`);
   }
   for (const file of keyDocFiles) {
-    if (!fs.existsSync(path.join(outDir, file))) fail(`missing key doc ${file} for ${samplePath}`);
+    if (!fs.existsSync(path.join(generatedDir, file))) fail(`missing key doc ${file} for ${samplePath}`);
   }
   if (!failures.some((item) => item.includes(`for ${samplePath}`) && item.includes("estimate row"))) {
     pass(`estimate row links ${samplePath}`);
@@ -475,36 +473,47 @@ function checkGeneratedWorkbookRequirements(samplePath, xlsxFiles) {
   }
 }
 
-function checkInitialSendPackage(samplePath) {
-  const initialDir = path.join(outDir, initialSendDirName);
-  const initialFiles = fs.existsSync(initialDir) ? fs.readdirSync(initialDir).sort() : [];
-  for (const file of initialSendFiles) {
-    assert(initialFiles.includes(file), `${samplePath} initial send file ${file}`);
-  }
-  assert(initialFiles.length === initialSendFiles.length, `${samplePath} initial send file count ${initialFiles.length}/${initialSendFiles.length}`);
-
-  const zipPath = path.join(outDir, initialSendZipName);
-  try {
-    run("unzip", ["-tqq", zipPath]);
-    pass(`initial send zip integrity ${samplePath}`);
-  } catch (error) {
-    fail(`invalid initial send zip for ${samplePath}: ${error.stderr || error.message}`);
-  }
-
-  const entries = packageEntries(zipPath);
-  const extractDir = fs.mkdtempSync(path.join(os.tmpdir(), "scopeguard-initial-send-"));
-  try {
-    run("unzip", ["-qq", zipPath, "-d", extractDir]);
-    const extractedFiles = listOutputFiles(path.join(extractDir, initialSendDirName), [])
-      .map((file) => path.basename(file))
+function checkPhasePackages(samplePath) {
+  for (const bundle of phaseBundles) {
+    const bundleDir = path.join(outDir, bundle.dirName);
+    const actualFiles = fs.existsSync(bundleDir)
+      ? fs.readdirSync(bundleDir).filter((file) => file.endsWith(".hwp") || file.endsWith(".xlsx")).sort()
+      : [];
+    const expectedFiles = bundle.files
+      .filter((file) => fs.existsSync(path.join(generatedDir, file)))
       .sort();
-    for (const file of initialSendFiles) {
-      assert(extractedFiles.includes(file), `${samplePath} initial send zip file ${file}`);
+    for (const file of bundle.requiredFiles || []) {
+      assert(expectedFiles.includes(file), `${samplePath} ${bundle.dirName} required source ${file}`);
     }
-    assert(extractedFiles.length === initialSendFiles.length, `${samplePath} initial send zip count ${extractedFiles.length}/${initialSendFiles.length}`);
-    assert(entries.filter((entry) => entry.endsWith(legacyWordExtension)).length === 0, `${samplePath} initial send zip legacy word count 0`);
-  } finally {
-    fs.rmSync(extractDir, { recursive: true, force: true });
+    for (const file of expectedFiles) {
+      assert(actualFiles.includes(file), `${samplePath} ${bundle.dirName} file ${file}`);
+    }
+    assert(actualFiles.length === expectedFiles.length, `${samplePath} ${bundle.dirName} file count ${actualFiles.length}/${expectedFiles.length}`);
+
+    const zipPath = path.join(outDir, bundle.zipName);
+    try {
+      run("unzip", ["-tqq", zipPath]);
+      pass(`${bundle.dirName} zip integrity ${samplePath}`);
+    } catch (error) {
+      fail(`invalid ${bundle.dirName} zip for ${samplePath}: ${error.stderr || error.message}`);
+    }
+
+    const entries = packageEntries(zipPath);
+    const extractDir = fs.mkdtempSync(path.join(os.tmpdir(), "scopeguard-phase-bundle-"));
+    try {
+      run("unzip", ["-qq", zipPath, "-d", extractDir]);
+      const extractedDir = path.join(extractDir, bundle.dirName);
+      const extractedFiles = fs.existsSync(extractedDir)
+        ? fs.readdirSync(extractedDir).filter((file) => file.endsWith(".hwp") || file.endsWith(".xlsx")).sort()
+        : [];
+      for (const file of expectedFiles) {
+        assert(extractedFiles.includes(file), `${samplePath} ${bundle.dirName} zip file ${file}`);
+      }
+      assert(extractedFiles.length === expectedFiles.length, `${samplePath} ${bundle.dirName} zip count ${extractedFiles.length}/${expectedFiles.length}`);
+      assert(entries.filter((entry) => entry.endsWith(legacyWordExtension)).length === 0, `${samplePath} ${bundle.dirName} zip legacy word count 0`);
+    } finally {
+      fs.rmSync(extractDir, { recursive: true, force: true });
+    }
   }
 }
 
@@ -516,7 +525,7 @@ function checkZipAndFiles(samplePath, hwpFiles, xlsxFiles, expectedHwp, expected
 
   for (const file of hwpFiles) {
     try {
-      run("rhwp", ["info", path.join(outDir, file)]);
+      run("rhwp", ["info", path.join(generatedDir, file)]);
     } catch (error) {
       fail(`invalid hwp ${file} for ${samplePath}: ${error.stderr || error.message}`);
     }
@@ -525,14 +534,20 @@ function checkZipAndFiles(samplePath, hwpFiles, xlsxFiles, expectedHwp, expected
 
   for (const file of xlsxFiles) {
     try {
-      run("unzip", ["-tqq", path.join(outDir, file)]);
+      run("unzip", ["-tqq", path.join(generatedDir, file)]);
     } catch (error) {
       fail(`invalid xlsx ${file} for ${samplePath}: ${error.stderr || error.message}`);
     }
   }
   pass(`xlsx integrity ${samplePath}`);
 
-  const packagePath = path.join(outDir, "scopeguard_sw_contract_docs.zip");
+  const rootDocumentFiles = fs.readdirSync(outDir, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && (entry.name.endsWith(".hwp") || entry.name.endsWith(".xlsx")))
+    .map((entry) => entry.name)
+    .sort();
+  assert(rootDocumentFiles.length === 0, `${samplePath} output root document count 0`);
+
+  const packagePath = path.join(outDir, fullArchiveZipName);
   try {
     run("unzip", ["-tqq", packagePath]);
     pass(`zip integrity ${samplePath}`);
@@ -546,7 +561,7 @@ function checkZipAndFiles(samplePath, hwpFiles, xlsxFiles, expectedHwp, expected
   assert(hwpEntries.length === expectedHwp, `${samplePath} zip hwp count ${hwpEntries.length}/${expectedHwp}`);
   const workbookEntries = packageEntries(packagePath).filter((entry) => entry.endsWith(".xlsx"));
   assert(workbookEntries.length === expectedXlsx, `${samplePath} zip xlsx count ${workbookEntries.length}/${expectedXlsx}`);
-  checkInitialSendPackage(samplePath);
+  checkPhasePackages(samplePath);
 }
 
 function checkOptionalDocs(samplePath, files, optional) {
@@ -584,8 +599,10 @@ function checkIgnoreBoundary() {
   }
 
   const targets = [
-    "output/scopeguard_sw_contract_docs.zip",
-    "output/scopeguard_initial_send_package.zip",
+    `output/${fullArchiveZipName}`,
+    `output/${initialSendZipName}`,
+    "output/02_2차_계약체결_실무정리용.zip",
+    "output/03_3차_이행_검수_분쟁기록용.zip",
     "data/contract-input.json",
     "data/example.local.json",
     "private/example.md",

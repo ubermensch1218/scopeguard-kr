@@ -1,0 +1,80 @@
+export const fullArchiveDirName = "99_전체_산출물_보관용";
+export const fullArchiveZipName = "99_전체_산출물_보관용.zip";
+
+export const initialSendDirName = "01_1차_변호사_초기검토용";
+export const initialSendZipName = "01_1차_변호사_초기검토용.zip";
+export const initialSendFiles = [
+  "22_변호사_검토_요청서.hwp",
+  "01_입력값_요약표.hwp",
+  "01_입력값_요약표.xlsx",
+  "03_SW_개발용역계약서_초안.hwp",
+  "02_RFP_과업내용서.hwp",
+  "04_검수기준표.hwp",
+  "10_대금_마일스톤_지급표.hwp",
+  "11_권리귀속_소스코드_인도목록.hwp",
+  "13_개인정보_보안_요구사항.hwp",
+  "14_공급자_수요자_합의표.hwp",
+  "14_공급자_수요자_합의표.xlsx",
+  "15_견적산정표.xlsx",
+  "21_계약서_리스크_검토표.xlsx",
+];
+
+export const phaseBundles = [
+  {
+    dirName: initialSendDirName,
+    zipName: initialSendZipName,
+    files: initialSendFiles,
+    requiredFiles: initialSendFiles,
+  },
+  {
+    dirName: "02_2차_계약체결_실무정리용",
+    zipName: "02_2차_계약체결_실무정리용.zip",
+    files: [
+      "01_입력값_요약표.hwp",
+      "01_입력값_요약표.xlsx",
+      "02_RFP_과업내용서.hwp",
+      "03_SW_개발용역계약서_초안.hwp",
+      "04_검수기준표.hwp",
+      "04_검수기준표.xlsx",
+      "10_대금_마일스톤_지급표.hwp",
+      "10_대금_마일스톤_지급표.xlsx",
+      "14_공급자_수요자_합의표.hwp",
+      "14_공급자_수요자_합의표.xlsx",
+      "15_견적산정표.hwp",
+      "15_견적산정표.xlsx",
+      "16_선택별첨_디자인_UX_수정범위.hwp",
+      "16_선택별첨_디자인_UX_수정범위.xlsx",
+      "17_선택별첨_수정횟수_산정표.hwp",
+      "17_선택별첨_수정횟수_산정표.xlsx",
+      "18_기능별_구현_디자인_명세서.hwp",
+      "18_기능별_구현_디자인_명세서.xlsx",
+      "19_착수자료_확정표.xlsx",
+      "21_계약서_리스크_검토표.xlsx",
+    ],
+  },
+  {
+    dirName: "03_3차_이행_검수_분쟁기록용",
+    zipName: "03_3차_이행_검수_분쟁기록용.zip",
+    files: [
+      "04_검수기준표.hwp",
+      "04_검수기준표.xlsx",
+      "05_수정요청서.hwp",
+      "05_수정요청서.xlsx",
+      "06_변경요청서.hwp",
+      "06_변경요청서.xlsx",
+      "07_회의록_승인서.hwp",
+      "07_회의록_승인서.xlsx",
+      "08_납품확인서.hwp",
+      "08_납품확인서.xlsx",
+      "09_하자신고서.hwp",
+      "09_하자신고서.xlsx",
+      "10_대금_마일스톤_지급표.hwp",
+      "10_대금_마일스톤_지급표.xlsx",
+      "11_권리귀속_소스코드_인도목록.hwp",
+      "12_운영비_API_계정_인수인계서.hwp",
+      "13_개인정보_보안_요구사항.hwp",
+      "20_검수실행_기록표.xlsx",
+      "21_계약서_리스크_검토표.xlsx",
+    ],
+  },
+];

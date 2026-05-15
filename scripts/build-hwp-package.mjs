@@ -6,6 +6,7 @@ import { buildDocuments } from "./hwp/docs/index.mjs";
 import { buildWorkbooks } from "./xlsx/workbooks/index.mjs";
 import { writeXlsx } from "./xlsx/writer.mjs";
 import { v } from "./hwp/helpers.mjs";
+import { fullArchiveDirName, fullArchiveZipName, phaseBundles } from "./output-bundles.mjs";
 
 const root = path.resolve(new URL("..", import.meta.url).pathname);
 const outDir = path.join(root, "output");
@@ -21,25 +22,13 @@ const inputPath = (() => {
 
 const input = JSON.parse(fs.readFileSync(inputPath, "utf8"));
 
-const initialSendDirName = "초기_전달용";
-const initialSendZipName = "scopeguard_initial_send_package.zip";
-const initialSendFiles = [
-  "22_변호사_검토_요청서.hwp",
-  "03_SW_개발용역계약서_초안.hwp",
-  "02_RFP_과업내용서.hwp",
-  "04_검수기준표.hwp",
-  "10_대금_마일스톤_지급표.hwp",
-  "11_권리귀속_소스코드_인도목록.hwp",
-  "13_개인정보_보안_요구사항.hwp",
-  "15_견적산정표.xlsx",
-  "21_계약서_리스크_검토표.xlsx",
-];
+const fullArchiveDir = path.join(outDir, fullArchiveDirName);
 
 function normalizeHwpText(value) {
   return v(value, "").replace(/\r?\n/gu, " / ");
 }
 
-function writeHwpDocuments(documents) {
+function writeHwpDocuments(documents, outputDir) {
   if (!fs.existsSync(path.join(rhwpRepo, "Cargo.toml"))) {
     throw new Error(`rhwp repository not found: ${rhwpRepo}`);
   }
@@ -59,7 +48,7 @@ rhwp = { path = ${JSON.stringify(rhwpRepo)} }
     );
     fs.mkdirSync(path.join(tmp, "src"));
     fs.writeFileSync(path.join(tmp, "src", "main.rs"), renderHwpRustGenerator(documents));
-    execFileSync("cargo", ["run", "--quiet", "--", outDir], {
+    execFileSync("cargo", ["run", "--quiet", "--", outputDir], {
       cwd: tmp,
       env: {
         ...process.env,
@@ -296,44 +285,53 @@ function rustString(value) {
     .replaceAll("\n", "\\n")}"`;
 }
 
-function writeInitialSendPackage() {
-  const initialDir = path.join(outDir, initialSendDirName);
-  fs.rmSync(initialDir, { recursive: true, force: true });
-  fs.mkdirSync(initialDir, { recursive: true });
+function writeBundlePackage(sourceDir, bundle) {
+  const bundleDir = path.join(outDir, bundle.dirName);
+  fs.rmSync(bundleDir, { recursive: true, force: true });
+  fs.mkdirSync(bundleDir, { recursive: true });
 
-  for (const file of initialSendFiles) {
-    const source = path.join(outDir, file);
-    if (!fs.existsSync(source)) throw new Error(`initial send file missing: ${file}`);
-    fs.copyFileSync(source, path.join(initialDir, file));
+  const requiredFiles = new Set(bundle.requiredFiles || []);
+  const copiedFiles = [];
+  for (const file of bundle.files) {
+    const source = path.join(sourceDir, file);
+    if (!fs.existsSync(source)) {
+      if (requiredFiles.has(file)) throw new Error(`phase bundle file missing: ${file}`);
+      continue;
+    }
+    fs.copyFileSync(source, path.join(bundleDir, file));
+    copiedFiles.push(file);
   }
 
-  const zipPath = path.join(outDir, initialSendZipName);
+  const zipPath = path.join(outDir, bundle.zipName);
   fs.rmSync(zipPath, { force: true });
-  execFileSync("zip", ["-qr", zipPath, initialSendDirName], { cwd: outDir });
+  execFileSync("zip", ["-qr", zipPath, bundle.dirName], { cwd: outDir });
+  return { dirPath: bundleDir, copiedFiles, zipPath };
+}
+
+function writeFullArchivePackage() {
+  const zipPath = path.join(outDir, fullArchiveZipName);
+  fs.rmSync(zipPath, { force: true });
+  execFileSync("zip", ["-qr", zipPath, fullArchiveDirName], { cwd: outDir });
   return zipPath;
 }
 
 function main() {
   fs.rmSync(outDir, { recursive: true, force: true });
-  fs.mkdirSync(outDir, { recursive: true });
+  fs.mkdirSync(fullArchiveDir, { recursive: true });
   const documents = buildDocuments(input);
   const workbooks = buildWorkbooks(input);
-  writeHwpDocuments(documents);
-  for (const workbook of workbooks) writeXlsx(workbook, outDir);
-  const initialPackagePath = writeInitialSendPackage();
-
-  const packagePath = path.join(outDir, "scopeguard_sw_contract_docs.zip");
-  execFileSync("zip", [
-    "-qr",
-    packagePath,
-    ...documents.map((doc) => doc.file),
-    ...workbooks.map((workbook) => workbook.file),
-  ], { cwd: outDir });
+  writeHwpDocuments(documents, fullArchiveDir);
+  for (const workbook of workbooks) writeXlsx(workbook, fullArchiveDir);
+  const bundleResults = phaseBundles.map((bundle) => writeBundlePackage(fullArchiveDir, bundle));
+  const packagePath = writeFullArchivePackage();
 
   console.log(`input ${inputPath}`);
-  console.log(`created ${documents.length} hwp files in ${outDir}`);
-  console.log(`created ${workbooks.length} xlsx files in ${outDir}`);
-  console.log(`created initial send package ${initialPackagePath}`);
+  console.log(`created ${documents.length} hwp files in ${fullArchiveDir}`);
+  console.log(`created ${workbooks.length} xlsx files in ${fullArchiveDir}`);
+  for (const result of bundleResults) {
+    console.log(`created ${result.copiedFiles.length} files in ${result.dirPath}`);
+    console.log(`created ${result.zipPath}`);
+  }
   console.log(`created ${packagePath}`);
 }
 
