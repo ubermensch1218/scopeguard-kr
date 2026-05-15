@@ -2,7 +2,7 @@ import { h, table } from "../helpers.mjs";
 
 export function build(ctx) {
   return {
-    file: "12_운영비_API_계정_인수인계서.docx",
+    file: "12_운영비_API_계정_인수인계서.hwp",
     title: `${ctx.projectName} 운영비/API/계정 인수인계서`,
     blocks: [
       h("운영 비용"),

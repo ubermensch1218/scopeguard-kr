@@ -1,4 +1,4 @@
-import { createDocxContext, designUxRevisionCases, revisionCountingRows, v } from "../../docx/helpers.mjs";
+import { createHwpContext, designUxRevisionCases, revisionCountingRows, v } from "../../hwp/helpers.mjs";
 
 const header = (...items) => items;
 const row = (...items) => items.map((item) => v(item, ""));
@@ -136,7 +136,7 @@ function expertReviewRows() {
 }
 
 export function buildWorkbooks(input) {
-  const ctx = createDocxContext(input);
+  const ctx = createHwpContext(input);
   const optional = ctx.optionalAppendices;
   const workbooks = [
     {

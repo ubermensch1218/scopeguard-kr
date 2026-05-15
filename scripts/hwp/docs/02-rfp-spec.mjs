@@ -3,7 +3,7 @@ import { h, table } from "../helpers.mjs";
 export function build(ctx) {
   const { input } = ctx;
   return {
-    file: "02_RFP_과업내용서.docx",
+    file: "02_RFP_과업내용서.hwp",
     title: `${ctx.projectName} RFP 및 과업내용서`,
     blocks: [
       h("사업 개요"),

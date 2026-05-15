@@ -12,7 +12,7 @@
 | `SECURITY.md` | 민감한 제보와 공개 저장소 경계 |
 | `.github/` | PR, 이슈, CI, CODEOWNERS 설정 |
 | `index.html`, `assets/` | 정적 입력 UI |
-| `scripts/` | DOCX/XLSX 생성기와 문서별 빌더 |
+| `scripts/` | HWP/XLSX 생성기와 문서별 빌더 |
 | `templates/` | 공개 가능한 문서 템플릿 |
 | `docs/` | PRD, 데이터 모델, 참고문헌, 공개 검토 문서 |
 | `samples/` | 익명화된 표본 |
@@ -26,7 +26,7 @@
 
 | 영역 | 이유 |
 |---|---|
-| `output/` | 생성 DOCX/XLSX/ZIP 산출물 |
+| `output/` | 생성 HWP/XLSX/ZIP 산출물 |
 | `private/`, `.private/`, `local/` | 실계약, 실고객, 내부 메모 |
 | `data/contract-input.json` | 실제 프로젝트 입력값 |
 | `data/*.local.json`, `data/*.private.json` | 로컬 또는 비공개 입력값 |
@@ -34,7 +34,7 @@
 | `.env*`, `.dev.vars`, `.wrangler/` | 환경변수와 배포 상태 |
 | `.codex/sessions/`, `.codex/state/`, `.codex/logs/`, `.omx/` | 로컬 실행 상태 |
 | `*secret*`, `*credentials*`, `*.pem`, `*.key`, `*.p12` | 접속 정보 가능성이 높은 파일 |
-| `*.local.docx`, `*.private.docx`, `*.local.hwpx`, `*.private.hwpx` | 비공개 문서 파일명 규칙 |
+| `*.local.hwp`, `*.private.hwp` | 비공개 문서 파일명 규칙 |
 
 ## 올리기 전 점검
 

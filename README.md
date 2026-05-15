@@ -12,7 +12,7 @@ SW 외주개발계약에서 반복되는 과업범위, 검수, 수정횟수, 변
 
 | 질문 | 답 |
 |---|---|
-| 무엇을 만드나 | SW 개발용역 계약서 초안과 부속 DOCX/XLSX 패키지 |
+| 무엇을 만드나 | SW 개발용역 계약서 초안과 부속 HWP/XLSX 패키지 |
 | 누가 쓰나 | 발주자, 수급자, PM, 디자이너, 개발사, 실무 검토자 |
 | 핵심 입력은 | 견적 row, 요구사항 ID, 완료 조건, 테스트 조건, 착수자료 상태 |
 | 핵심 출력은 | 계약서 초안, 검수기준표, 변경요청서, 수정요청서, 리스크 검토표, 변호사 검토 요청서 |
@@ -40,41 +40,45 @@ SW 외주개발계약에서 반복되는 과업범위, 검수, 수정횟수, 변
 
 ## What It Creates
 
-문서는 성격에 따라 나눕니다. 읽고 승인하는 문서는 DOCX, 행 단위로 확인하는 긴 표는 XLSX를 우선합니다.
+문서는 성격에 따라 나눕니다. 읽고 승인하는 문서는 HWP, 행 단위로 확인하는 긴 표는 XLSX를 우선합니다.
 
 ![Scopeguard review package](assets/readme/review-package.svg)
 
 | 구분 | 산출물 | 형식 |
 |---|---|---|
-| 계약 기준 | 계약서 초안, RFP/과업내용서, 입력값 요약표 | DOCX, HWP, XLSX |
-| 범위·견적 | 견적산정표, 기능별 구현·디자인 명세서, 착수자료 확정표 | DOCX, HWP, XLSX |
-| 검수·납품 | 검수기준표, 검수실행 기록표, 납품확인서 | DOCX, HWP, XLSX |
-| 요청 처리 | 수정요청서, 변경요청서, 하자신고서, 회의록 승인서 | DOCX, HWP, XLSX |
-| 비용·운영 | 대금 마일스톤 지급표, 운영비/API/계정 인수인계서 | DOCX, HWP, XLSX |
-| 권리·보안 | 권리귀속/소스코드 인도목록, 개인정보/보안 요구사항 | DOCX, HWP |
-| 합의·리스크 | 공급자/수요자 합의표, 계약서 리스크 검토표 | DOCX, HWP, XLSX |
-| 선택 별첨 | 디자인/UX 수정범위, 수정횟수 산정표 | DOCX, HWP, XLSX |
-| 전달·검토 | 변호사 검토 요청서, 계약서 리스크 검토표 | DOCX, HWP, XLSX |
+| 계약 기준 | 계약서 초안, RFP/과업내용서, 입력값 요약표 | HWP, XLSX |
+| 범위·견적 | 견적산정표, 기능별 구현·디자인 명세서, 착수자료 확정표 | HWP, XLSX |
+| 검수·납품 | 검수기준표, 검수실행 기록표, 납품확인서 | HWP, XLSX |
+| 요청 처리 | 수정요청서, 변경요청서, 하자신고서, 회의록 승인서 | HWP, XLSX |
+| 비용·운영 | 대금 마일스톤 지급표, 운영비/API/계정 인수인계서 | HWP, XLSX |
+| 권리·보안 | 권리귀속/소스코드 인도목록, 개인정보/보안 요구사항 | HWP |
+| 합의·리스크 | 공급자/수요자 합의표, 계약서 리스크 검토표 | HWP, XLSX |
+| 선택 별첨 | 디자인/UX 수정범위, 수정횟수 산정표 | HWP, XLSX |
+| 전달·검토 | 변호사 검토 요청서, 계약서 리스크 검토표 | HWP, XLSX |
 
 기본 샘플 기준 생성 결과:
 
 ```text
 output/
-  변호사_검토_요청서_정리본.hwp
-  22_변호사_검토_요청서.docx
   22_변호사_검토_요청서.hwp
-  03_SW_개발용역계약서_초안.docx
   03_SW_개발용역계약서_초안.hwp
-  04_검수기준표.docx
   04_검수기준표.hwp
-  15_견적산정표.docx
   15_견적산정표.hwp
-  18_기능별_구현_디자인_명세서.docx
   18_기능별_구현_디자인_명세서.hwp
   19_착수자료_확정표.xlsx
   20_검수실행_기록표.xlsx
   21_계약서_리스크_검토표.xlsx
-  scopeguard_lawyer_review_rhwp_package.zip
+  초기_전달용/
+    22_변호사_검토_요청서.hwp
+    03_SW_개발용역계약서_초안.hwp
+    02_RFP_과업내용서.hwp
+    04_검수기준표.hwp
+    10_대금_마일스톤_지급표.hwp
+    11_권리귀속_소스코드_인도목록.hwp
+    13_개인정보_보안_요구사항.hwp
+    15_견적산정표.xlsx
+    21_계약서_리스크_검토표.xlsx
+  scopeguard_initial_send_package.zip
   scopeguard_sw_contract_docs.zip
 ```
 
@@ -92,12 +96,12 @@ npm run build:lawyer:hwp
 입력 파일을 지정할 수도 있습니다.
 
 ```bash
-node scripts/build-docx-package.mjs --input data/contract-input.sample.json
-node scripts/build-docx-package.mjs --input data/contract-input.design.sample.json
-node scripts/build-docx-package.mjs --input data/contract-input.ops.sample.json
+node scripts/build-hwp-package.mjs --input data/contract-input.sample.json
+node scripts/build-hwp-package.mjs --input data/contract-input.design.sample.json
+node scripts/build-hwp-package.mjs --input data/contract-input.ops.sample.json
 ```
 
-`npm run build:docs`는 각 DOCX 문서와 같은 이름의 HWP 문서도 함께 생성합니다. 일반 계약문서 HWP와 변호사 전달 정리본 HWP는 로컬 `rhwp` 저장소를 사용합니다. 기본 경로는 `../rhwp`이며, 다른 위치에 있으면 `RHWP_REPO`로 지정합니다.
+`npm run build:docs`는 계약문서 HWP, 필요한 XLSX 체크표, 전체 ZIP, 초기 전달용 폴더/ZIP을 생성합니다. HWP 생성은 로컬 `rhwp` 저장소를 사용합니다. 기본 경로는 `../rhwp`이며, 다른 위치에 있으면 `RHWP_REPO`로 지정합니다.
 
 ```bash
 RHWP_REPO=/path/to/rhwp npm run build:docs
@@ -179,7 +183,7 @@ npm run audit:publish
 |---|---|
 | 문법 | JS/MJS 생성기 문법 검사 |
 | 샘플 JSON | 공개 샘플 3종 파싱 |
-| DOCX/XLSX 생성 | 샘플별 문서 수와 압축 무결성 검사 |
+| HWP/XLSX 생성 | 샘플별 문서 수와 압축 무결성 검사 |
 | 선택 별첨 | 디자인/UX, 수정횟수 별첨 on/off 확인 |
 | 견적 연결 | 견적 row ID가 핵심 문서에 반영되는지 확인 |
 | 필수 내용 | 각 문서와 workbook의 필수 문구 확인 |
@@ -190,7 +194,7 @@ npm run audit:publish
 
 ```text
 .github/
-  workflows/audit.yml     # 공개 경계와 DOCX/XLSX 생성 audit
+  workflows/audit.yml     # 공개 경계와 HWP/XLSX 생성 audit
   ISSUE_TEMPLATE/         # 공개 이슈 입력 양식
   pull_request_template.md
 
@@ -206,12 +210,12 @@ data/
   question-overlays.sample.json
 
 scripts/
-  build-docx-package.mjs  # DOCX/HWP/XLSX 패키징과 ZIP 생성
+  build-hwp-package.mjs   # HWP/XLSX 패키징과 ZIP 생성
   audit-publish.mjs       # 공개 전 샘플 빌드와 문자열 점검
   check-data.mjs          # 필수 파일 점검
-  docx/
+  hwp/
     helpers.mjs           # 공통 문단, 표, 값 포맷
-    docs/*.mjs            # DOCX별 문서 빌더
+    docs/*.mjs            # HWP별 문서 빌더
   xlsx/
     writer.mjs            # XLSX 패키징
     workbooks/*.mjs       # XLSX별 워크북 빌더
@@ -234,7 +238,7 @@ GitHub에는 소스, 템플릿, 익명화된 샘플만 올립니다.
 | `samples/` | `data/uploads/`, `data/raw/` |
 | `data/*.sample.json` | `.env*`, `.dev.vars`, `.wrangler/` |
 | `.claude/skills/sw-contract-scopeguard/` | 로컬 assistant/runtime state |
-| `.codex/skills/sw-contract-scopeguard/` | 업로드 원본 문서, 생성 DOCX/XLSX/ZIP |
+| `.codex/skills/sw-contract-scopeguard/` | 업로드 원본 문서, 생성 HWP/XLSX/ZIP |
 
 자세한 기준은 [`docs/publish-boundary.md`](docs/publish-boundary.md)에 있습니다. 공개 PR은 `npm run audit:publish`를 통과해야 합니다.
 
@@ -246,7 +250,7 @@ GitHub에는 소스, 템플릿, 익명화된 샘플만 올립니다.
 | 개발사/프리랜서 | 실제로 자주 터지는 요청 유형과 견적 row 구조 |
 | 발주자 | 이해하기 쉬운 입력 문항과 검수 기준 |
 | 디자이너/PM | 화면설계, 디자인 변경, UX 개선 요청 분류 |
-| 문서 자동화 개발자 | DOCX/XLSX/HWPX 생성, JSON Schema, UI 작성 흐름 |
+| 문서 자동화 개발자 | HWP/XLSX 생성, JSON Schema, UI 작성 흐름 |
 
 관련 문서:
 
@@ -265,7 +269,7 @@ GitHub에는 소스, 템플릿, 익명화된 샘플만 올립니다.
 - 소프트웨어사업 계약 및 관리감독에 관한 지침
 - 조달청 e-발주시스템/RFP 작성 구조
 - `chrisryugj/korean-law-mcp`: 법제처 API 기반 법령·공개문서·행정규칙 조회
-- `chrisryugj/kordoc`: HWP/HWPX/PDF/DOCX/XLSX 문서 파싱·비교·생성
+- `chrisryugj/kordoc`: HWP/PDF/XLSX 문서 파싱·비교·생성
 
 정리된 참고 목록은 [`docs/reference-bibliography.md`](docs/reference-bibliography.md)와 [`docs/legal-mcp-findings.md`](docs/legal-mcp-findings.md)에 있습니다.
 

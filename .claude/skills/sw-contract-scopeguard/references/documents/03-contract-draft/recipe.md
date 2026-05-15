@@ -1,8 +1,8 @@
 # 03 SW 개발용역계약서 초안
 
-- Format: DOCX
+- Format: HWP
 - Inputs: 착수 조건, 검수, 수정, 변경요청, 대금, 권리, 회의 기준
-- Output: `03_SW_개발용역계약서_초안.docx`
+- Output: `03_SW_개발용역계약서_초안.hwp`
 - Must include: 개발 착수 조건, 변경요청 조항, 분쟁 축소 절차
 - Use when: 합의된 파라미터를 계약 본문 조항으로 반영할 때
 - Avoid: 승패 판단이나 법률 자문처럼 보이는 표현

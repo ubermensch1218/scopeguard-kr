@@ -2,10 +2,10 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { buildDocuments } from "./docx/docs/index.mjs";
+import { buildDocuments } from "./hwp/docs/index.mjs";
 import { buildWorkbooks } from "./xlsx/workbooks/index.mjs";
 import { writeXlsx } from "./xlsx/writer.mjs";
-import { v } from "./docx/helpers.mjs";
+import { v } from "./hwp/helpers.mjs";
 
 const root = path.resolve(new URL("..", import.meta.url).pathname);
 const outDir = path.join(root, "output");
@@ -21,141 +21,19 @@ const inputPath = (() => {
 
 const input = JSON.parse(fs.readFileSync(inputPath, "utf8"));
 
-function escapeXml(value) {
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-function paragraphXml(text, style = "Normal") {
-  const pStyle = style === "Normal" ? "" : `<w:pPr><w:pStyle w:val="${style}"/></w:pPr>`;
-  return `<w:p>${pStyle}<w:r><w:t xml:space="preserve">${escapeXml(text)}</w:t></w:r></w:p>`;
-}
-
-function cellXml(value, header = false) {
-  const shading = header ? '<w:shd w:fill="1F4E79"/>' : "";
-  const color = header ? '<w:color w:val="FFFFFF"/>' : '<w:color w:val="222222"/>';
-  const boldOpen = header ? "<w:b/>" : "";
-  return `<w:tc>
-    <w:tcPr>
-      <w:tcW w:w="2400" w:type="dxa"/>
-      <w:vAlign w:val="top"/>
-      ${shading}
-    </w:tcPr>
-    <w:p>
-      <w:pPr><w:spacing w:after="40"/></w:pPr>
-      <w:r><w:rPr>${boldOpen}${color}<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="18"/></w:rPr><w:t xml:space="preserve">${escapeXml(v(value, ""))}</w:t></w:r>
-    </w:p>
-  </w:tc>`;
-}
-
-function tableXml(block) {
-  const headerRow = `<w:tr><w:trPr><w:tblHeader/><w:cantSplit/></w:trPr>${block.headers.map((item) => cellXml(item, true)).join("")}</w:tr>`;
-  const bodyRows = block.rows
-    .map((row) => `<w:tr><w:trPr><w:cantSplit/></w:trPr>${row.map((item) => cellXml(item)).join("")}</w:tr>`)
-    .join("");
-  return `<w:tbl>
-    <w:tblPr>
-      <w:tblW w:w="0" w:type="auto"/>
-      <w:tblLook w:firstRow="1" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/>
-      <w:tblBorders>
-        <w:top w:val="single" w:sz="6" w:color="B7C2D0"/>
-        <w:left w:val="single" w:sz="6" w:color="B7C2D0"/>
-        <w:bottom w:val="single" w:sz="6" w:color="B7C2D0"/>
-        <w:right w:val="single" w:sz="6" w:color="B7C2D0"/>
-        <w:insideH w:val="single" w:sz="4" w:color="D9E2EC"/>
-        <w:insideV w:val="single" w:sz="4" w:color="D9E2EC"/>
-      </w:tblBorders>
-      <w:tblCellMar>
-        <w:top w:w="120" w:type="dxa"/><w:left w:w="140" w:type="dxa"/><w:bottom w:w="120" w:type="dxa"/><w:right w:w="140" w:type="dxa"/>
-      </w:tblCellMar>
-    </w:tblPr>
-    ${headerRow}${bodyRows}
-  </w:tbl><w:p/>`;
-}
-
-function blockXml(block) {
-  if (block.type === "table") return tableXml(block);
-  return paragraphXml(block.text, block.style);
-}
-
-function documentXml(doc) {
-  const body = [
-    paragraphXml(doc.title, "Title"),
-    ...doc.blocks.map(blockXml),
-  ].join("\n");
-
-  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-  <w:body>
-    ${body}
-    <w:sectPr>
-      <w:pgSz w:w="11906" w:h="16838"/>
-      <w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134"/>
-    </w:sectPr>
-  </w:body>
-</w:document>`;
-}
-
-const contentTypesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
-  <Default Extension="xml" ContentType="application/xml"/>
-  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
-  <Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
-</Types>`;
-
-const rootRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
-</Relationships>`;
-
-const stylesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-  <w:style w:type="paragraph" w:default="1" w:styleId="Normal">
-    <w:name w:val="Normal"/>
-    <w:pPr><w:spacing w:line="340" w:lineRule="auto" w:after="120"/></w:pPr>
-    <w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:color w:val="222222"/><w:sz w:val="20"/></w:rPr>
-  </w:style>
-  <w:style w:type="paragraph" w:styleId="Title">
-    <w:name w:val="Title"/>
-    <w:basedOn w:val="Normal"/>
-    <w:pPr><w:spacing w:after="280"/></w:pPr>
-    <w:rPr><w:b/><w:color w:val="17365D"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="36"/></w:rPr>
-  </w:style>
-  <w:style w:type="paragraph" w:styleId="Heading1">
-    <w:name w:val="heading 1"/>
-    <w:basedOn w:val="Normal"/>
-    <w:pPr><w:spacing w:before="320" w:after="140"/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="D9E2EC"/></w:pBdr></w:pPr>
-    <w:rPr><w:b/><w:color w:val="1F4E79"/><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="25"/></w:rPr>
-  </w:style>
-  <w:style w:type="paragraph" w:styleId="Quote">
-    <w:name w:val="Quote"/>
-    <w:basedOn w:val="Normal"/>
-    <w:pPr><w:ind w:left="300"/><w:spacing w:before="80" w:after="180"/><w:pBdr><w:left w:val="single" w:sz="12" w:space="8" w:color="9EB6D8"/></w:pBdr></w:pPr>
-    <w:rPr><w:i/><w:color w:val="5C667A"/></w:rPr>
-  </w:style>
-</w:styles>`;
-
-function writeDocx(doc) {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "scopeguard-docx-"));
-  fs.mkdirSync(path.join(tmp, "_rels"), { recursive: true });
-  fs.mkdirSync(path.join(tmp, "word"), { recursive: true });
-  fs.writeFileSync(path.join(tmp, "[Content_Types].xml"), contentTypesXml);
-  fs.writeFileSync(path.join(tmp, "_rels", ".rels"), rootRelsXml);
-  fs.writeFileSync(path.join(tmp, "word", "document.xml"), documentXml(doc));
-  fs.writeFileSync(path.join(tmp, "word", "styles.xml"), stylesXml);
-
-  const outPath = path.join(outDir, doc.file);
-  execFileSync("zip", ["-qr", outPath, "[Content_Types].xml", "_rels", "word"], { cwd: tmp });
-  fs.rmSync(tmp, { recursive: true, force: true });
-}
-
-function hwpFileName(docxFile) {
-  return docxFile.replace(/\.docx$/u, ".hwp");
-}
+const initialSendDirName = "초기_전달용";
+const initialSendZipName = "scopeguard_initial_send_package.zip";
+const initialSendFiles = [
+  "22_변호사_검토_요청서.hwp",
+  "03_SW_개발용역계약서_초안.hwp",
+  "02_RFP_과업내용서.hwp",
+  "04_검수기준표.hwp",
+  "10_대금_마일스톤_지급표.hwp",
+  "11_권리귀속_소스코드_인도목록.hwp",
+  "13_개인정보_보안_요구사항.hwp",
+  "15_견적산정표.xlsx",
+  "21_계약서_리스크_검토표.xlsx",
+];
 
 function normalizeHwpText(value) {
   return v(value, "").replace(/\r?\n/gu, " / ");
@@ -198,7 +76,7 @@ function renderHwpRustGenerator(documents) {
   const calls = documents
     .map((doc) => `    write_doc(
         output_dir,
-        ${rustString(hwpFileName(doc.file))},
+        ${rustString(doc.file)},
         ${rustString(doc.title)},
         &[
 ${doc.blocks.map(renderHwpBlock).join("\n")}
@@ -418,28 +296,44 @@ function rustString(value) {
     .replaceAll("\n", "\\n")}"`;
 }
 
+function writeInitialSendPackage() {
+  const initialDir = path.join(outDir, initialSendDirName);
+  fs.rmSync(initialDir, { recursive: true, force: true });
+  fs.mkdirSync(initialDir, { recursive: true });
+
+  for (const file of initialSendFiles) {
+    const source = path.join(outDir, file);
+    if (!fs.existsSync(source)) throw new Error(`initial send file missing: ${file}`);
+    fs.copyFileSync(source, path.join(initialDir, file));
+  }
+
+  const zipPath = path.join(outDir, initialSendZipName);
+  fs.rmSync(zipPath, { force: true });
+  execFileSync("zip", ["-qr", zipPath, initialSendDirName], { cwd: outDir });
+  return zipPath;
+}
+
 function main() {
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
   const documents = buildDocuments(input);
   const workbooks = buildWorkbooks(input);
-  for (const doc of documents) writeDocx(doc);
   writeHwpDocuments(documents);
   for (const workbook of workbooks) writeXlsx(workbook, outDir);
+  const initialPackagePath = writeInitialSendPackage();
 
   const packagePath = path.join(outDir, "scopeguard_sw_contract_docs.zip");
   execFileSync("zip", [
     "-qr",
     packagePath,
     ...documents.map((doc) => doc.file),
-    ...documents.map((doc) => hwpFileName(doc.file)),
     ...workbooks.map((workbook) => workbook.file),
   ], { cwd: outDir });
 
   console.log(`input ${inputPath}`);
-  console.log(`created ${documents.length} docx files in ${outDir}`);
   console.log(`created ${documents.length} hwp files in ${outDir}`);
   console.log(`created ${workbooks.length} xlsx files in ${outDir}`);
+  console.log(`created initial send package ${initialPackagePath}`);
   console.log(`created ${packagePath}`);
 }
 

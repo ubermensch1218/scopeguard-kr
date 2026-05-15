@@ -3,7 +3,7 @@ import { h, p, table } from "../helpers.mjs";
 export function build(ctx) {
   const { input } = ctx;
   return {
-    file: "06_변경요청서.docx",
+    file: "06_변경요청서.hwp",
     title: `${ctx.projectName} 변경요청서`,
     blocks: [
       p("본 문서는 승인된 과업 범위, 견적 row, 요구사항, 화면설계, 정책 또는 검수 기준을 변경하기 위한 양식입니다. 양 당사자의 비용·일정·검수 기준 서면 승인 전에는 변경 범위가 계약에 포함되지 않습니다.", "Quote"),

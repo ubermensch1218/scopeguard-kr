@@ -3,7 +3,7 @@ import { h, p, table, revisionCountingRows } from "../helpers.mjs";
 export function build(ctx) {
   const { input } = ctx;
   const doc = {
-    file: "05_수정요청서.docx",
+    file: "05_수정요청서.hwp",
     title: `${ctx.projectName} 수정요청서`,
     blocks: [
       p("본 문서는 산출물 제출 후 발주자가 계약상 제출기한 안에 일괄 제출하는 통합 수정요청서입니다. 하자, 신규 기능, 승인사항 번복, 구조 변경은 본 양식에서 별도 분류하여 처리합니다.", "Quote"),

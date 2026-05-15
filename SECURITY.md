@@ -16,7 +16,7 @@ Do not commit:
 
 - real contract input files
 - uploaded original documents
-- generated DOCX or ZIP files
+- generated HWP or ZIP files
 - environment files
 - access keys or service credentials
 - private customer or project notes

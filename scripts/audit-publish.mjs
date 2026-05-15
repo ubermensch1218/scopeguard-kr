@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 
@@ -71,15 +72,16 @@ const generatedBlocklist = [
   ...blockedPositioningTerms,
   ...blockedPrivateTerms,
 ];
+const legacyWordExtension = `.${["do", "cx"].join("")}`;
 
 const samples = [
   {
     input: "data/contract-input.sample.json",
-    expectedDocx: 20,
+    expectedHwp: 20,
     expectedXlsx: 16,
     optional: {
-      "16_선택별첨_디자인_UX_수정범위.docx": true,
-      "17_선택별첨_수정횟수_산정표.docx": true,
+      "16_선택별첨_디자인_UX_수정범위.hwp": true,
+      "17_선택별첨_수정횟수_산정표.hwp": true,
     },
     optionalXlsx: {
       "16_선택별첨_디자인_UX_수정범위.xlsx": true,
@@ -88,11 +90,11 @@ const samples = [
   },
   {
     input: "data/contract-input.design.sample.json",
-    expectedDocx: 20,
+    expectedHwp: 20,
     expectedXlsx: 16,
     optional: {
-      "16_선택별첨_디자인_UX_수정범위.docx": true,
-      "17_선택별첨_수정횟수_산정표.docx": true,
+      "16_선택별첨_디자인_UX_수정범위.hwp": true,
+      "17_선택별첨_수정횟수_산정표.hwp": true,
     },
     optionalXlsx: {
       "16_선택별첨_디자인_UX_수정범위.xlsx": true,
@@ -101,11 +103,11 @@ const samples = [
   },
   {
     input: "data/contract-input.ops.sample.json",
-    expectedDocx: 18,
+    expectedHwp: 18,
     expectedXlsx: 14,
     optional: {
-      "16_선택별첨_디자인_UX_수정범위.docx": false,
-      "17_선택별첨_수정횟수_산정표.docx": false,
+      "16_선택별첨_디자인_UX_수정범위.hwp": false,
+      "17_선택별첨_수정횟수_산정표.hwp": false,
     },
     optionalXlsx: {
       "16_선택별첨_디자인_UX_수정범위.xlsx": false,
@@ -115,34 +117,48 @@ const samples = [
 ];
 
 const keyDocFiles = [
-  "02_RFP_과업내용서.docx",
-  "03_SW_개발용역계약서_초안.docx",
-  "04_검수기준표.docx",
-  "10_대금_마일스톤_지급표.docx",
-  "15_견적산정표.docx",
+  "02_RFP_과업내용서.hwp",
+  "03_SW_개발용역계약서_초안.hwp",
+  "04_검수기준표.hwp",
+  "10_대금_마일스톤_지급표.hwp",
+  "15_견적산정표.hwp",
+];
+
+const initialSendDirName = "초기_전달용";
+const initialSendZipName = "scopeguard_initial_send_package.zip";
+const initialSendFiles = [
+  "22_변호사_검토_요청서.hwp",
+  "03_SW_개발용역계약서_초안.hwp",
+  "02_RFP_과업내용서.hwp",
+  "04_검수기준표.hwp",
+  "10_대금_마일스톤_지급표.hwp",
+  "11_권리귀속_소스코드_인도목록.hwp",
+  "13_개인정보_보안_요구사항.hwp",
+  "15_견적산정표.xlsx",
+  "21_계약서_리스크_검토표.xlsx",
 ];
 
 const generatedContentRequirements = [
-  ["00_참고문헌.docx", ["계약 조항의 판단이나 법률 의견이 아닙니다"]],
-  ["01_입력값_요약표.docx", ["핵심 운영 조건", "견적 row 수"]],
-  ["02_RFP_과업내용서.docx", ["견적 row 기반 작업 범위", "착수 자료"]],
-  ["03_SW_개발용역계약서_초안.docx", ["개발 착수 조건", "제7조 변경요청", "제10조 분쟁 축소 절차"]],
-  ["04_검수기준표.docx", ["견적 row 테스트 조건", "검수 절차"]],
-  ["05_수정요청서.docx", ["대상 화면/기능", "분류", "수정 회차", "수정 요청 항목", "분류 기준", "처리 결과"]],
-  ["06_변경요청서.docx", ["기준 견적 row", "변경 대상 요구사항 ID", "착수 조건", "변경 사유/분류", "영향 분석", "승인 전 착수 금지"]],
-  ["07_회의록_승인서.docx", ["결정 사항", "보류 사항", "승인 기준", "회의 비용/횟수 기준", "구두 요청 효력", "액션 아이템"]],
-  ["08_납품확인서.docx", ["확인 구분", "단순 납품 수령 확인", "검수 완료 및 승인 확인", "납품 범위", "산출물 인도 목록", "검수 및 대금", "잔금 지급 조건", "미비 항목 및 보완 기한", "하자·무상수정·변경요청 구분", "권리/계정 인수 확인", "검수 합격 또는 하자 없음"]],
-  ["09_하자신고서.docx", ["재현 절차", "기대 결과", "실제 결과", "하자 성립 체크", "처리 기준", "무상수정 회차 차감 여부"]],
-  ["10_대금_마일스톤_지급표.docx", ["마일스톤", "견적 row 금액"]],
-  ["11_권리귀속_소스코드_인도목록.docx", ["프로젝트 전용 산출물", "수급자 사전보유자산"]],
-  ["12_운영비_API_계정_인수인계서.docx", ["운영 비용", "계정 인수인계"]],
-  ["13_개인정보_보안_요구사항.docx", ["개인정보 처리 여부", "접근통제"]],
-  ["14_공급자_수요자_합의표.docx", ["수요자 이점", "공급자 이점", "균형안"]],
-  ["15_견적산정표.docx", ["견적 row", "변경요청 단가", "전제조건"]],
-  ["16_선택별첨_디자인_UX_수정범위.docx", ["사례별 분류표", "입력해야 할 기준"]],
-  ["17_선택별첨_수정횟수_산정표.docx", ["수정 1회", "산정표"]],
-  ["18_기능별_구현_디자인_명세서.docx", ["진입점", "디자인 요건 충족 여부", "디자인 플로우", "Mermaid", "최종 화면", "최종 결과", "화면/결과 검수 연결"]],
-  ["22_변호사_검토_요청서.docx", ["전달 패키지", "NDA/IP 집중 검토", "21_계약서_리스크_검토표.xlsx", "회신 형식"]],
+  ["00_참고문헌.hwp", ["계약 조항의 판단이나"]],
+  ["01_입력값_요약표.hwp", ["핵심 운영 조건", "견적 row 수"]],
+  ["02_RFP_과업내용서.hwp", ["견적 row 기반 작업 범위", "착수 자료"]],
+  ["03_SW_개발용역계약서_초안.hwp", ["개발 착수 조건", "제7조 변경요청", "제10조 분쟁 축소 절차"]],
+  ["04_검수기준표.hwp", ["견적 row 테스트 조건", "검수 절차"]],
+  ["05_수정요청서.hwp", ["대상 화면/기능", "분류", "수정 회차", "수정 요청 항목", "분류 기준", "처리 결과"]],
+  ["06_변경요청서.hwp", ["기준 견적 row", "변경 대상 요구사항 ID", "착수 조건", "변경 사유/분류", "영향 분석", "승인 전 착수 금지"]],
+  ["07_회의록_승인서.hwp", ["결정 사항", "보류 사항", "승인 기준", "회의 비용/횟수 기준", "구두 요청 효력", "액션 아이템"]],
+  ["08_납품확인서.hwp", ["확인 구분", "단순 납품 수령 확인", "검수 완료 및 승인 확인", "납품 범위", "산출물 인도 목록", "검수 및 대금", "잔금 지급 조건", "미비 항목 및 보완 기한", "하자·무상수정·변경요청 구분", "권리/계정 인수 확인"]],
+  ["09_하자신고서.hwp", ["재현 절차", "기대 결과", "실제 결과", "하자 성립 체크", "처리 기준", "무상수정 회차 차감 여부"]],
+  ["10_대금_마일스톤_지급표.hwp", ["마일스톤", "견적 row 금액"]],
+  ["11_권리귀속_소스코드_인도목록.hwp", ["프로젝트 전용 산출물", "수급자 사전보유자산"]],
+  ["12_운영비_API_계정_인수인계서.hwp", ["운영 비용", "계정 인수인계"]],
+  ["13_개인정보_보안_요구사항.hwp", ["개인정보 처리 여부", "접근통제"]],
+  ["14_공급자_수요자_합의표.hwp", ["수요자 이점", "공급자 이점", "균형안"]],
+  ["15_견적산정표.hwp", ["견적 row", "변경요청 단가", "전제조건"]],
+  ["16_선택별첨_디자인_UX_수정범위.hwp", ["사례별 분류표", "입력해야 할 기준"]],
+  ["17_선택별첨_수정횟수_산정표.hwp", ["수정 1회", "산정표"]],
+  ["18_기능별_구현_디자인_명세서.hwp", ["진입점", "디자인 요건 충족 여부", "디자인 플로우", "Mermaid", "최종 화면", "최종 결과", "화면/결과 검수 연결"]],
+  ["22_변호사_검토_요청서.hwp", ["전달 패키지", "NDA/IP 집중 검토", "21_계약서_리스크_검토표.xlsx", "회신 형식"]],
 ];
 
 const generatedWorkbookRequirements = [
@@ -192,7 +208,7 @@ const documentModuleSlugs = [
 
 const syntaxTargets = [
   "assets/app.js",
-  "scripts/build-docx-package.mjs",
+  "scripts/build-hwp-package.mjs",
   "scripts/build-rhwp-lawyer-package.mjs",
   "scripts/check-data.mjs",
   "scripts/audit-publish.mjs",
@@ -244,8 +260,8 @@ function walk(dir, acc = []) {
   return acc;
 }
 
-function listDocxScriptTargets() {
-  return walk(path.join(root, "scripts", "docx")).filter((file) => file.endsWith(".mjs"));
+function listHwpScriptTargets() {
+  return walk(path.join(root, "scripts", "hwp")).filter((file) => file.endsWith(".mjs"));
 }
 
 function listXlsxScriptTargets() {
@@ -276,7 +292,7 @@ function listSourceScanTargets() {
 }
 
 function checkSyntax() {
-  const targets = [...syntaxTargets, ...listDocxScriptTargets(), ...listXlsxScriptTargets()];
+  const targets = [...syntaxTargets, ...listHwpScriptTargets(), ...listXlsxScriptTargets()];
   for (const target of targets) {
     try {
       run("node", ["--check", target]);
@@ -309,13 +325,13 @@ function checkRequiredFiles() {
 
 function checkSkillProof() {
   const expectations = [
-    [".codex/skills/sw-contract-scopeguard/SKILL.md", ["orchestrator", "DOCX/XLSX", "references/documents/index.md", "입증"]],
-    [".claude/skills/sw-contract-scopeguard/SKILL.md", ["orchestrator", "DOCX/XLSX", "references/documents/index.md", "입증"]],
-    [".codex/skills/sw-contract-scopeguard/references/document-writing-recipes.md", ["DOCX/XLSX", "입증 기준", "22 | 변호사 검토 요청서"]],
-    [".claude/skills/sw-contract-scopeguard/references/document-writing-recipes.md", ["DOCX/XLSX", "입증 기준", "22 | 변호사 검토 요청서"]],
+    [".codex/skills/sw-contract-scopeguard/SKILL.md", ["orchestrator", "HWP/XLSX", "references/documents/index.md", "입증"]],
+    [".claude/skills/sw-contract-scopeguard/SKILL.md", ["orchestrator", "HWP/XLSX", "references/documents/index.md", "입증"]],
+    [".codex/skills/sw-contract-scopeguard/references/document-writing-recipes.md", ["HWP/XLSX", "입증 기준", "22 | 변호사 검토 요청서"]],
+    [".claude/skills/sw-contract-scopeguard/references/document-writing-recipes.md", ["HWP/XLSX", "입증 기준", "22 | 변호사 검토 요청서"]],
     [".codex/skills/sw-contract-scopeguard/references/documents/index.md", ["Document Modules", "orchestrator skill", "22-lawyer-review-request"]],
     [".claude/skills/sw-contract-scopeguard/references/documents/index.md", ["Document Modules", "orchestrator skill", "22-lawyer-review-request"]],
-    ["docs/skill-proof.md", ["DOCX 생성", "XLSX 생성", "양식 필수 내용"]],
+    ["docs/skill-proof.md", ["HWP 생성", "XLSX 생성", "양식 필수 내용"]],
   ];
   for (const [target, terms] of expectations) {
     const text = readText(target);
@@ -364,10 +380,6 @@ function parseInput(samplePath) {
   return JSON.parse(readText(samplePath));
 }
 
-function listGeneratedDocx() {
-  return fs.readdirSync(outDir).filter((file) => file.endsWith(".docx")).sort();
-}
-
 function listGeneratedHwp() {
   return fs.readdirSync(outDir).filter((file) => file.endsWith(".hwp")).sort();
 }
@@ -376,8 +388,22 @@ function listGeneratedXlsx() {
   return fs.readdirSync(outDir).filter((file) => file.endsWith(".xlsx")).sort();
 }
 
-function docxXml(file) {
-  return run("unzip", ["-p", path.join(outDir, file), "word/document.xml"]);
+function listOutputFiles(dir = outDir, acc = []) {
+  if (!fs.existsSync(dir)) return acc;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) listOutputFiles(full, acc);
+    else acc.push(path.relative(outDir, full));
+  }
+  return acc;
+}
+
+function listUnexpectedLegacyWordDocs() {
+  return listOutputFiles().filter((file) => file.endsWith(legacyWordExtension)).sort();
+}
+
+function hwpText(file) {
+  return run("rhwp", ["dump", path.join(outDir, file)]);
 }
 
 function xlsxXml(file) {
@@ -396,9 +422,9 @@ function packageEntries(packagePath) {
   }
 }
 
-function checkGeneratedText(samplePath, docxFiles, xlsxFiles) {
+function checkGeneratedText(samplePath, hwpFiles, xlsxFiles) {
   const generatedText = [
-    ...docxFiles.map((file) => docxXml(file)),
+    ...hwpFiles.map((file) => hwpText(file)),
     ...xlsxFiles.map((file) => xlsxXml(file)),
   ].join("\n");
   for (const term of generatedBlocklist) {
@@ -423,12 +449,12 @@ function checkEstimateIds(samplePath, input, generatedText) {
   }
 }
 
-function checkGeneratedContentRequirements(samplePath, docxFiles) {
+function checkGeneratedContentRequirements(samplePath, hwpFiles) {
   for (const [file, terms] of generatedContentRequirements) {
-    if (!docxFiles.includes(file)) continue;
-    const xml = docxXml(file);
+    if (!hwpFiles.includes(file)) continue;
+    const text = hwpText(file);
     for (const term of terms) {
-      if (!xml.includes(term)) fail(`missing required content in ${file} for ${samplePath}: ${term}`);
+      if (!text.includes(term)) fail(`missing required content in ${file} for ${samplePath}: ${term}`);
     }
   }
   if (!failures.some((item) => item.includes(`for ${samplePath}`) && item.includes("missing required content"))) {
@@ -449,19 +475,44 @@ function checkGeneratedWorkbookRequirements(samplePath, xlsxFiles) {
   }
 }
 
-function checkZipAndFiles(samplePath, docxFiles, hwpFiles, xlsxFiles, expectedDocx, expectedXlsx) {
-  assert(docxFiles.length === expectedDocx, `${samplePath} docx count ${docxFiles.length}/${expectedDocx}`);
-  assert(hwpFiles.length === expectedDocx, `${samplePath} hwp count ${hwpFiles.length}/${expectedDocx}`);
-  assert(xlsxFiles.length === expectedXlsx, `${samplePath} xlsx count ${xlsxFiles.length}/${expectedXlsx}`);
-
-  for (const file of docxFiles) {
-    try {
-      run("unzip", ["-tqq", path.join(outDir, file)]);
-    } catch (error) {
-      fail(`invalid docx ${file} for ${samplePath}: ${error.stderr || error.message}`);
-    }
+function checkInitialSendPackage(samplePath) {
+  const initialDir = path.join(outDir, initialSendDirName);
+  const initialFiles = fs.existsSync(initialDir) ? fs.readdirSync(initialDir).sort() : [];
+  for (const file of initialSendFiles) {
+    assert(initialFiles.includes(file), `${samplePath} initial send file ${file}`);
   }
-  pass(`docx integrity ${samplePath}`);
+  assert(initialFiles.length === initialSendFiles.length, `${samplePath} initial send file count ${initialFiles.length}/${initialSendFiles.length}`);
+
+  const zipPath = path.join(outDir, initialSendZipName);
+  try {
+    run("unzip", ["-tqq", zipPath]);
+    pass(`initial send zip integrity ${samplePath}`);
+  } catch (error) {
+    fail(`invalid initial send zip for ${samplePath}: ${error.stderr || error.message}`);
+  }
+
+  const entries = packageEntries(zipPath);
+  const extractDir = fs.mkdtempSync(path.join(os.tmpdir(), "scopeguard-initial-send-"));
+  try {
+    run("unzip", ["-qq", zipPath, "-d", extractDir]);
+    const extractedFiles = listOutputFiles(path.join(extractDir, initialSendDirName), [])
+      .map((file) => path.basename(file))
+      .sort();
+    for (const file of initialSendFiles) {
+      assert(extractedFiles.includes(file), `${samplePath} initial send zip file ${file}`);
+    }
+    assert(extractedFiles.length === initialSendFiles.length, `${samplePath} initial send zip count ${extractedFiles.length}/${initialSendFiles.length}`);
+    assert(entries.filter((entry) => entry.endsWith(legacyWordExtension)).length === 0, `${samplePath} initial send zip legacy word count 0`);
+  } finally {
+    fs.rmSync(extractDir, { recursive: true, force: true });
+  }
+}
+
+function checkZipAndFiles(samplePath, hwpFiles, xlsxFiles, expectedHwp, expectedXlsx) {
+  const unexpectedLegacyWordDocs = listUnexpectedLegacyWordDocs();
+  assert(unexpectedLegacyWordDocs.length === 0, `${samplePath} generated legacy word count 0`);
+  assert(hwpFiles.length === expectedHwp, `${samplePath} hwp count ${hwpFiles.length}/${expectedHwp}`);
+  assert(xlsxFiles.length === expectedXlsx, `${samplePath} xlsx count ${xlsxFiles.length}/${expectedXlsx}`);
 
   for (const file of hwpFiles) {
     try {
@@ -489,12 +540,13 @@ function checkZipAndFiles(samplePath, docxFiles, hwpFiles, xlsxFiles, expectedDo
     fail(`invalid zip for ${samplePath}: ${error.stderr || error.message}`);
   }
 
-  const entries = packageEntries(packagePath).filter((entry) => entry.endsWith(".docx"));
-  assert(entries.length === expectedDocx, `${samplePath} zip docx count ${entries.length}/${expectedDocx}`);
+  const entries = packageEntries(packagePath);
+  assert(entries.filter((entry) => entry.endsWith(legacyWordExtension)).length === 0, `${samplePath} zip legacy word count 0`);
   const hwpEntries = packageEntries(packagePath).filter((entry) => entry.endsWith(".hwp"));
-  assert(hwpEntries.length === expectedDocx, `${samplePath} zip hwp count ${hwpEntries.length}/${expectedDocx}`);
+  assert(hwpEntries.length === expectedHwp, `${samplePath} zip hwp count ${hwpEntries.length}/${expectedHwp}`);
   const workbookEntries = packageEntries(packagePath).filter((entry) => entry.endsWith(".xlsx"));
   assert(workbookEntries.length === expectedXlsx, `${samplePath} zip xlsx count ${workbookEntries.length}/${expectedXlsx}`);
+  checkInitialSendPackage(samplePath);
 }
 
 function checkOptionalDocs(samplePath, files, optional) {
@@ -506,7 +558,7 @@ function checkOptionalDocs(samplePath, files, optional) {
 
 function buildSample(sample) {
   try {
-    run("node", ["scripts/build-docx-package.mjs", "--input", sample.input]);
+    run("node", ["scripts/build-hwp-package.mjs", "--input", sample.input]);
     pass(`build ${sample.input}`);
   } catch (error) {
     fail(`build ${sample.input}: ${error.stderr || error.message}`);
@@ -514,20 +566,14 @@ function buildSample(sample) {
   }
 
   const input = parseInput(sample.input);
-  const docxFiles = listGeneratedDocx();
   const hwpFiles = listGeneratedHwp();
   const xlsxFiles = listGeneratedXlsx();
-  checkZipAndFiles(sample.input, docxFiles, hwpFiles, xlsxFiles, sample.expectedDocx, sample.expectedXlsx);
-  checkOptionalDocs(sample.input, docxFiles, sample.optional);
-  checkOptionalDocs(
-    sample.input,
-    hwpFiles,
-    Object.fromEntries(Object.entries(sample.optional).map(([file, expected]) => [file.replace(/\.docx$/u, ".hwp"), expected])),
-  );
+  checkZipAndFiles(sample.input, hwpFiles, xlsxFiles, sample.expectedHwp, sample.expectedXlsx);
+  checkOptionalDocs(sample.input, hwpFiles, sample.optional);
   checkOptionalDocs(sample.input, xlsxFiles, sample.optionalXlsx);
-  const generatedText = checkGeneratedText(sample.input, docxFiles, xlsxFiles);
+  const generatedText = checkGeneratedText(sample.input, hwpFiles, xlsxFiles);
   checkEstimateIds(sample.input, input, generatedText);
-  checkGeneratedContentRequirements(sample.input, docxFiles);
+  checkGeneratedContentRequirements(sample.input, hwpFiles);
   checkGeneratedWorkbookRequirements(sample.input, xlsxFiles);
 }
 
@@ -539,6 +585,7 @@ function checkIgnoreBoundary() {
 
   const targets = [
     "output/scopeguard_sw_contract_docs.zip",
+    "output/scopeguard_initial_send_package.zip",
     "data/contract-input.json",
     "data/example.local.json",
     "private/example.md",

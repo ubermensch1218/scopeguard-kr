@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   publish-audit:
-    name: Publish boundary and DOCX audit
+    name: Publish boundary and HWP audit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install DOCX audit tools
+      - name: Install HWP audit tools
         run: sudo apt-get update && sudo apt-get install -y zip unzip
 
       - name: Check required files

@@ -53,7 +53,7 @@ export function formDoc(file, title, rows) {
   return { file, title, blocks: [table(["항목", "내용"], rows)] };
 }
 
-export function createDocxContext(input) {
+export function createHwpContext(input) {
   const projectName = v(input.project?.name, "SW 외주개발 프로젝트");
   const buyer = v(input.parties?.buyer?.name, "발주자");
   const supplier = v(input.parties?.supplier?.name, "수급자");

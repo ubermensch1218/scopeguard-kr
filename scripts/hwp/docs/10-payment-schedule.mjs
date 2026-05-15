@@ -3,7 +3,7 @@ import { h, table } from "../helpers.mjs";
 export function build(ctx) {
   const { input } = ctx;
   return {
-    file: "10_대금_마일스톤_지급표.docx",
+    file: "10_대금_마일스톤_지급표.hwp",
     title: `${ctx.projectName} 대금 및 마일스톤 지급표`,
     blocks: [
       table(["항목", "내용"], [

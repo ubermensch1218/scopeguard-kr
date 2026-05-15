@@ -3,7 +3,7 @@ import { h, p, table } from "../helpers.mjs";
 export function build(ctx) {
   const { input } = ctx;
   return {
-    file: "09_하자신고서.docx",
+    file: "09_하자신고서.hwp",
     title: `${ctx.projectName} 하자신고서`,
     blocks: [
       p("본 문서는 계약 범위 기능의 불능, 재현 가능한 오류, 검수 기준 미달을 신고하기 위한 양식입니다. 단순 선호 변경, UX 개선, 신규 기능 요청은 하자가 아니라 수정요청 또는 변경요청으로 분류합니다.", "Quote"),

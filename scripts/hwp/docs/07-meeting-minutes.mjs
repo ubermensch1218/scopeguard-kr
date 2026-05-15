@@ -3,7 +3,7 @@ import { h, p, table } from "../helpers.mjs";
 export function build(ctx) {
   const { input } = ctx;
   return {
-    file: "07_회의록_승인서.docx",
+    file: "07_회의록_승인서.hwp",
     title: `${ctx.projectName} 회의록 및 승인서`,
     blocks: [
       p("회의 중 논의된 사항은 본 회의록이 승인된 경우에만 계약 운영 기준으로 사용합니다. 신규 기능, 신규 화면, 데이터 구조 변경, 승인사항 번복은 회의록만으로 착수하지 않고 변경요청서로 처리합니다.", "Quote"),

@@ -3,7 +3,7 @@ import { h, p, revisionCountingRows, table } from "../helpers.mjs";
 export function build(ctx) {
   if (!ctx.optionalAppendices.revisionCounting) return [];
   return {
-    file: "17_선택별첨_수정횟수_산정표.docx",
+    file: "17_선택별첨_수정횟수_산정표.hwp",
     title: `${ctx.projectName} 선택별첨 - 수정횟수 산정표`,
     blocks: [
       p("이 별첨은 입력값에서 선택한 경우에만 계약문서 세트에 포함됩니다.", "Quote"),

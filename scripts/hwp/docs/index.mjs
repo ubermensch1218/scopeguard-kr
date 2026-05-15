@@ -1,4 +1,4 @@
-import { createDocxContext } from "../helpers.mjs";
+import { createHwpContext } from "../helpers.mjs";
 import { build as reference } from "./00-reference.mjs";
 import { build as inputSummary } from "./01-input-summary.mjs";
 import { build as rfpSpec } from "./02-rfp-spec.mjs";
@@ -44,6 +44,6 @@ const builders = [
 ];
 
 export function buildDocuments(input) {
-  const ctx = createDocxContext(input);
+  const ctx = createHwpContext(input);
   return builders.flatMap((builder) => builder(ctx)).filter(Boolean);
 }

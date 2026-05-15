@@ -9,10 +9,6 @@
       src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"
       defer
     ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/docx-preview@0.3.6/dist/docx-preview.min.js"
-      defer
-    ></script>
   </head>
   <body>
     <header class="app-header">
@@ -62,8 +58,8 @@
             <p>입장과 기본 정보를 고른 뒤 견적 row를 채우면 계약문서 초안이 생성됩니다.</p>
           </div>
           <div class="button-row">
-            <button id="download-bundle" type="button">계약문서 ZIP</button>
-            <button id="download-contract" class="ghost" type="button">계약서 초안 DOCX</button>
+            <button id="download-bundle" type="button">계약문서 초안 ZIP</button>
+            <button id="download-contract" class="ghost" type="button">계약서 초안 텍스트</button>
           </div>
         </div>
 
@@ -202,36 +198,36 @@
 
         <div class="result-box">
           <h3>발주자 제출용 견적서 미리보기</h3>
-          <div id="buyer-estimate-output" class="docx-preview-shell compact-preview" aria-label="발주자 제출용 견적서 미리보기"></div>
+          <div id="buyer-estimate-output" class="document-preview-shell compact-preview" aria-label="발주자 제출용 견적서 미리보기"></div>
         </div>
 
         <div class="check-grid" id="rfp-checks" aria-live="polite"></div>
 
         <div class="document-bundle" aria-label="생성 문서 목록">
           <strong>생성되는 파일</strong>
-          <span>00_참고문헌.docx</span>
-          <span>01_입력값_요약표.docx</span>
-          <span>02_RFP_과업내용서.docx</span>
-          <span>03_SW_개발용역계약서_초안.docx</span>
-          <span>04_검수기준표.docx</span>
-          <span>05_수정요청서.docx</span>
-          <span>06_변경요청서.docx</span>
-          <span>07_회의록_승인서.docx</span>
-          <span>08_납품확인서.docx</span>
-          <span>09_하자신고서.docx</span>
-          <span>10_대금_마일스톤_지급표.docx</span>
-          <span>11_권리귀속_소스코드_인도목록.docx</span>
-          <span>12_운영비_API_계정_인수인계서.docx</span>
-          <span>13_개인정보_보안_요구사항.docx</span>
-          <span>14_공급자_수요자_합의표.docx</span>
-          <span>15_견적산정표.docx</span>
-          <span class="optional-file hidden" data-optional-file="designUx">16_선택별첨_디자인_UX_수정범위.docx</span>
-          <span class="optional-file hidden" data-optional-file="revisionCounting">17_선택별첨_수정횟수_산정표.docx</span>
+          <span>00_참고문헌.hwp</span>
+          <span>01_입력값_요약표.hwp</span>
+          <span>02_RFP_과업내용서.hwp</span>
+          <span>03_SW_개발용역계약서_초안.hwp</span>
+          <span>04_검수기준표.hwp</span>
+          <span>05_수정요청서.hwp</span>
+          <span>06_변경요청서.hwp</span>
+          <span>07_회의록_승인서.hwp</span>
+          <span>08_납품확인서.hwp</span>
+          <span>09_하자신고서.hwp</span>
+          <span>10_대금_마일스톤_지급표.hwp</span>
+          <span>11_권리귀속_소스코드_인도목록.hwp</span>
+          <span>12_운영비_API_계정_인수인계서.hwp</span>
+          <span>13_개인정보_보안_요구사항.hwp</span>
+          <span>14_공급자_수요자_합의표.hwp</span>
+          <span>15_견적산정표.hwp</span>
+          <span class="optional-file hidden" data-optional-file="designUx">16_선택별첨_디자인_UX_수정범위.hwp</span>
+          <span class="optional-file hidden" data-optional-file="revisionCounting">17_선택별첨_수정횟수_산정표.hwp</span>
         </div>
 
         <div class="result-box">
-          <h3>DOCX 미리보기</h3>
-          <div id="rfp-output" class="docx-preview-shell" aria-label="계약서 초안 DOCX 미리보기"></div>
+          <h3>문서 미리보기</h3>
+          <div id="rfp-output" class="document-preview-shell" aria-label="계약서 초안 미리보기"></div>
         </div>
       </section>
 
@@ -242,7 +238,7 @@
             <h2 id="agreement-title">서로 납득할 기준</h2>
             <p>수요자와 공급자가 각각 얻는 이점과 균형안을 한 줄로 보여줍니다.</p>
           </div>
-          <button id="download-agreement" class="ghost" type="button">합의표 DOCX</button>
+          <button id="download-agreement" class="ghost" type="button">합의표 텍스트</button>
         </div>
 
         <div id="agreement-table" class="agreement-table"></div>
@@ -255,12 +251,12 @@
             <h2 id="risk-title">계약 입력 점검</h2>
             <p>계약서 본문을 붙여넣으면 무상수정, 검수, 변경요청, 회의 관련 누락 항목을 찾습니다.</p>
           </div>
-          <button id="download-risk" class="ghost" type="button">점검 결과 DOCX</button>
+          <button id="download-risk" class="ghost" type="button">점검 결과 텍스트</button>
         </div>
 
         <label>
           계약서 본문
-          <textarea id="contract-text" rows="10" placeholder="계약서 본문을 붙여넣으세요. HWPX/PDF는 kordoc 등으로 Markdown/Text 변환 후 넣는 것을 권장합니다."></textarea>
+          <textarea id="contract-text" rows="10" placeholder="계약서 본문을 붙여넣으세요. HWP/PDF는 텍스트로 변환 후 넣는 것을 권장합니다."></textarea>
         </label>
 
         <div class="grid two">
@@ -278,8 +274,8 @@
         <div id="risk-results" class="risk-results" aria-live="polite"></div>
 
         <div class="result-box">
-          <h3>DOCX 미리보기</h3>
-          <div id="risk-output" class="docx-preview-shell" aria-label="계약 입력 점검 DOCX 미리보기"></div>
+          <h3>문서 미리보기</h3>
+          <div id="risk-output" class="document-preview-shell" aria-label="계약 입력 점검 미리보기"></div>
         </div>
       </section>
     </main>

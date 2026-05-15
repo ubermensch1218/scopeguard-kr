@@ -8,7 +8,7 @@
   <g transform="translate(96 166)">
     <rect x="0" y="0" width="230" height="250" rx="16" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
     <rect x="0" y="0" width="230" height="52" rx="16" fill="#DBEAFE"/>
-    <text x="24" y="34" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#1D4ED8">22 DOCX</text>
+    <text x="24" y="34" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#1D4ED8">22 HWP</text>
     <text x="24" y="88" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#17365D">검토 요청서</text>
     <text x="24" y="124" font-family="Arial, sans-serif" font-size="16" fill="#3F3F46">검토 범위</text>
     <text x="24" y="152" font-family="Arial, sans-serif" font-size="16" fill="#3F3F46">전달 파일 목록</text>
@@ -19,7 +19,7 @@
   <g transform="translate(360 166)">
     <rect x="0" y="0" width="230" height="250" rx="16" fill="#FFFFFF" stroke="#16A34A" stroke-width="2"/>
     <rect x="0" y="0" width="230" height="52" rx="16" fill="#DCFCE7"/>
-    <text x="24" y="34" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#166534">03 DOCX</text>
+    <text x="24" y="34" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#166534">03 HWP</text>
     <text x="24" y="88" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#17365D">계약서 초안</text>
     <text x="24" y="124" font-family="Arial, sans-serif" font-size="16" fill="#3F3F46">착수 조건</text>
     <text x="24" y="152" font-family="Arial, sans-serif" font-size="16" fill="#3F3F46">검수 / 수정</text>
@@ -30,7 +30,7 @@
   <g transform="translate(624 166)">
     <rect x="0" y="0" width="230" height="250" rx="16" fill="#FFFFFF" stroke="#F59E0B" stroke-width="2"/>
     <rect x="0" y="0" width="230" height="52" rx="16" fill="#FEF3C7"/>
-    <text x="24" y="34" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#92400E">11 / 13 DOCX</text>
+    <text x="24" y="34" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#92400E">11 / 13 HWP</text>
     <text x="24" y="88" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#17365D">권리 / 보안</text>
     <text x="24" y="124" font-family="Arial, sans-serif" font-size="16" fill="#3F3F46">소스코드 인도</text>
     <text x="24" y="152" font-family="Arial, sans-serif" font-size="16" fill="#3F3F46">사전보유자산</text>

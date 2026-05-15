@@ -17,7 +17,6 @@ const generatedAt = new Intl.DateTimeFormat("ko-KR", {
 
 const sourceMd = path.join(outputDir, "변호사_검토_요청서_정리본.md");
 const outputHwp = path.join(outputDir, "변호사_검토_요청서_정리본.hwp");
-const staleHwpx = path.join(outputDir, "변호사_검토_요청서_정리본.hwpx");
 const outputZip = path.join(outputDir, "scopeguard_lawyer_review_rhwp_package.zip");
 const riskWorkbook = path.join(outputDir, "21_계약서_리스크_검토표.xlsx");
 
@@ -141,7 +140,6 @@ rhwp = { path = ${JSON.stringify(rhwpRepo)} }
   await mkdir(path.join(workDir, "src"));
   await writeFile(path.join(workDir, "src/main.rs"), renderRustGenerator(docLines), "utf8");
 
-  await rm(staleHwpx, { force: true });
   run("cargo", ["run", "--quiet", "--", outputHwp], workDir, { quiet: true });
   await rm(outputZip, { force: true });
   const zipDir = path.join(workDir, "zip");

@@ -3,7 +3,7 @@ import { designUxRevisionCases, h, p, table } from "../helpers.mjs";
 export function build(ctx) {
   if (!ctx.optionalAppendices.designUx) return [];
   return {
-    file: "16_선택별첨_디자인_UX_수정범위.docx",
+    file: "16_선택별첨_디자인_UX_수정범위.hwp",
     title: `${ctx.projectName} 선택별첨 - 디자인/UX 수정 범위`,
     blocks: [
       p("이 별첨은 입력값에서 선택한 경우에만 계약문서 세트에 포함됩니다.", "Quote"),

@@ -18,8 +18,8 @@
 
 서버가 필요한 경우:
 
-- HWPX/PDF 업로드 후 텍스트 추출
+- HWP/PDF 업로드 후 텍스트 추출
 - korean-law-mcp 기반 법령/행정규칙/공개문서 조회
-- kordoc 기반 HWPX 생성
+- kordoc 기반 HWP 생성
 - 익명화된 리스크 패턴 저장
 - 변호사 검토 워크플로우

@@ -1,6 +1,6 @@
 ---
 name: sw-contract-scopeguard
-description: SW 외주개발계약 문서 생성을 조율하는 orchestrator skill입니다. 계약 파라미터를 수집하고, 문서별 recipe module을 라우팅해 분쟁 예방 기준이 반영된 DOCX/XLSX 계약문서 패키지를 생성합니다. 기능별 진입점, 디자인 요건 충족 여부, Mermaid 플로우, 최종 화면/결과를 정리할 때 사용합니다.
+description: SW 외주개발계약 문서 생성을 조율하는 orchestrator skill입니다. 계약 파라미터를 수집하고, 문서별 recipe module을 라우팅해 분쟁 예방 기준이 반영된 HWP/XLSX 계약문서 패키지를 생성합니다. 기능별 진입점, 디자인 요건 충족 여부, Mermaid 플로우, 최종 화면/결과를 정리할 때 사용합니다.
 ---
 
 # SW Contract Scopeguard Orchestrator
@@ -34,7 +34,7 @@ description: SW 외주개발계약 문서 생성을 조율하는 orchestrator sk
 3. 기능 ID와 견적 row 연결
 4. 기능별 진입점, 디자인 요건 충족 여부, 디자인 플로우, 최종 화면/결과 입력
 5. 견적 row별 전제조건, 완수 조건, 테스트 조건, 부수 항목 입력
-6. 표 형태 DOCX/XLSX 계약문서 패키지
+6. 표 형태 HWP/XLSX 계약문서 패키지
 7. 계약서 초안
 8. 부속서류
 9. 참고문헌 문서
@@ -180,7 +180,7 @@ description: SW 외주개발계약 문서 생성을 조율하는 orchestrator sk
 - “수요자 이점 / 공급자 이점 / 균형안”을 함께 제시한다.
 - 모호한 값은 기본 프리셋을 넣되 `확인 필요`로 표시한다.
 - 법률상 단정 표현을 피한다.
-- 사용자용 산출물은 선택형 입력값 기반 표 형태 DOCX/XLSX 계약문서 패키지로 구성한다.
+- 사용자용 산출물은 선택형 입력값 기반 표 형태 HWP/XLSX 계약문서 패키지로 구성한다.
 - 긴 체크표, 견적 row, 검수 실행, 리스크 검토는 XLSX를 우선한다.
 - 기능별 구현·디자인 명세는 `진입점 → 플로우 → 최종 결과 → 검수 연결` 순서로 작성한다.
 - Mermaid를 원본으로 두고 SVG는 첨부 산출물로만 취급한다.

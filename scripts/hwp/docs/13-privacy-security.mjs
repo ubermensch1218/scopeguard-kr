@@ -3,7 +3,7 @@ import { table } from "../helpers.mjs";
 export function build(ctx) {
   const { input } = ctx;
   return {
-    file: "13_개인정보_보안_요구사항.docx",
+    file: "13_개인정보_보안_요구사항.hwp",
     title: `${ctx.projectName} 개인정보 및 보안 요구사항`,
     blocks: [
       table(["항목", "내용"], [

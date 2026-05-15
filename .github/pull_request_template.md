@@ -31,7 +31,7 @@ What contract-writing, input, generator, or documentation problem does this PR s
 
 - [ ] `npm run check`
 - [ ] `npm run audit:publish`
-- [ ] Generated DOCX files were inspected when document wording changed.
+- [ ] Generated HWP files were inspected when document wording changed.
 
 ## Notes For Reviewers
 

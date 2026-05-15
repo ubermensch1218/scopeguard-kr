@@ -3,7 +3,7 @@ import { table } from "../helpers.mjs";
 export function build(ctx) {
   const { input } = ctx;
   return {
-    file: "11_권리귀속_소스코드_인도목록.docx",
+    file: "11_권리귀속_소스코드_인도목록.hwp",
     title: `${ctx.projectName} 권리귀속 및 소스코드 인도목록`,
     blocks: [
       table(["항목", "내용"], [

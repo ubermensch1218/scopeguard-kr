@@ -1,8 +1,8 @@
 # 22 변호사 검토 요청서
 
-- Format: DOCX
+- Format: HWP
 - Inputs: 프로젝트 기본 정보, 전달 패키지, 우선 검토 계약, NDA/IP 쟁점, 회신 형식
-- Output: `22_변호사_검토_요청서.docx`
+- Output: `22_변호사_검토_요청서.hwp`
 - Must include: 전달 패키지, NDA/IP 집중 검토, 회신 형식
 - Use when: 계약서와 부속서류를 변호사에게 검토 요청용 패키지로 보낼 때
 

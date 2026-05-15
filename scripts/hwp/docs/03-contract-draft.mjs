@@ -3,10 +3,10 @@ import { h, p, table } from "../helpers.mjs";
 function optionalAppendixBlocks(ctx) {
   const rows = [
     ctx.optionalAppendices.designUx
-      ? ["디자인/UX 수정 범위", "16_선택별첨_디자인_UX_수정범위.docx"]
+      ? ["디자인/UX 수정 범위", "16_선택별첨_디자인_UX_수정범위.hwp"]
       : null,
     ctx.optionalAppendices.revisionCounting
-      ? ["수정횟수 산정 로직", "17_선택별첨_수정횟수_산정표.docx"]
+      ? ["수정횟수 산정 로직", "17_선택별첨_수정횟수_산정표.hwp"]
       : null,
   ].filter(Boolean);
   if (!rows.length) return [];
@@ -20,7 +20,7 @@ function optionalAppendixBlocks(ctx) {
 export function build(ctx) {
   const { input } = ctx;
   return {
-    file: "03_SW_개발용역계약서_초안.docx",
+    file: "03_SW_개발용역계약서_초안.hwp",
     title: `${ctx.projectName} SW 개발용역계약서 초안`,
     blocks: [
       p("본 문서는 입력값을 기반으로 작성된 계약서 초안입니다. 외주개발에서 반복되는 분쟁을 줄이기 위한 운영 기준을 계약 조항과 부속서류에 반영합니다. 실제 체결 전 전문가 검토가 필요합니다.", "Quote"),

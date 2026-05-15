@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { v } from "../docx/helpers.mjs";
+import { v } from "../hwp/helpers.mjs";
 
 function escapeXml(value) {
   return String(value)

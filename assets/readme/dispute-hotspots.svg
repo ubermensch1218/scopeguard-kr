@@ -49,5 +49,5 @@
   </g>
 
   <line x1="244" y1="524" x2="956" y2="524" stroke="#CBD5E1" stroke-width="3"/>
-  <text x="348" y="558" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#17365D">Scopeguard는 이 지점들을 DOCX 조항과 XLSX 체크표로 나눠 잠급니다.</text>
+  <text x="348" y="558" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#17365D">Scopeguard는 이 지점들을 HWP 조항과 XLSX 체크표로 나눠 잠급니다.</text>
 </svg>

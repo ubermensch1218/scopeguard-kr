@@ -32,8 +32,8 @@
 | `estimate_rows_exported` | JSON 내보내기 | `{ rowCount }` |
 | `estimate_rows_imported` | JSON 불러오기 | `{ rowCount }` |
 | `appendix_option_changed` | 선택 별첨 변경 | `{ key, enabled }` |
-| `docx_bundle_downloaded` | ZIP 다운로드 | `{ rowCount }` |
-| `contract_docx_downloaded` | 계약서 DOCX 다운로드 | `{ rowCount }` |
+| `hwp_bundle_downloaded` | ZIP 다운로드 | `{ rowCount }` |
+| `contract_hwp_downloaded` | 계약서 HWP 다운로드 | `{ rowCount }` |
 | `workbook_xlsx_downloaded` | XLSX 다운로드 | `{ workbookName, rowCount }` |
 
 ## 향후 분석 지표

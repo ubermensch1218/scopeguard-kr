@@ -2,7 +2,7 @@ import { table, v } from "../helpers.mjs";
 
 export function build(ctx) {
   return {
-    file: "14_공급자_수요자_합의표.docx",
+    file: "14_공급자_수요자_합의표.hwp",
     title: "공급자/수요자 합의표",
     blocks: [
       table(["항목", "수요자 이점", "공급자 이점", "균형안"], [

@@ -3,7 +3,7 @@ import { h, table } from "../helpers.mjs";
 export function build(ctx) {
   const { input } = ctx;
   return {
-    file: "01_입력값_요약표.docx",
+    file: "01_입력값_요약표.hwp",
     title: `${ctx.projectName} 입력값 요약표`,
     blocks: [
       h("프로젝트"),

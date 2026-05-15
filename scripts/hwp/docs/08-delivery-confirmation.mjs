@@ -3,7 +3,7 @@ import { h, p, table } from "../helpers.mjs";
 export function build(ctx) {
   const { input } = ctx;
   return {
-    file: "08_납품확인서.docx",
+    file: "08_납품확인서.hwp",
     title: `${ctx.projectName} 납품확인서`,
     blocks: [
       p("본 문서는 산출물의 전달, 검수 상태, 잔금 청구 가능 여부, 미비 항목, 권리/계정 인수 범위를 확인하기 위한 양식입니다. 단순 수령 확인은 별도로 검수 완료에 체크되지 않는 한 검수 합격 또는 하자 없음의 확인으로 보지 않습니다.", "Quote"),

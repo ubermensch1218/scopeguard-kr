@@ -247,13 +247,13 @@ const agreementOptions = [
 const optionalAppendixMeta = [
   {
     key: "designUx",
-    filename: "16_선택별첨_디자인_UX_수정범위.docx",
+    filename: "16_선택별첨_디자인_UX_수정범위.hwp",
     label: "디자인/UX 수정 범위 별첨",
     contractLabel: "별첨 A. 디자인/UX 수정 범위",
   },
   {
     key: "revisionCounting",
-    filename: "17_선택별첨_수정횟수_산정표.docx",
+    filename: "17_선택별첨_수정횟수_산정표.hwp",
     label: "수정횟수 산정 로직 별첨",
     contractLabel: "별첨 B. 수정횟수 산정표",
   },
@@ -585,12 +585,12 @@ function renderReflectionMap() {
     return;
   }
   const targets = [
-    ["03_SW_개발용역계약서_초안.docx", "제4조 견적 row 기준 과업 범위"],
-    ["02_RFP_과업내용서.docx", "견적 row 기반 과업 범위"],
-    ["04_검수기준표.docx", "견적 row 테스트 조건"],
-    ["10_대금_마일스톤_지급표.docx", "견적 row 금액"],
-    ["15_견적산정표.docx", "견적 row 전체"],
-    ["06_변경요청서.docx", "기준 견적 row"],
+    ["03_SW_개발용역계약서_초안.hwp", "제4조 견적 row 기준 과업 범위"],
+    ["02_RFP_과업내용서.hwp", "견적 row 기반 과업 범위"],
+    ["04_검수기준표.hwp", "견적 row 테스트 조건"],
+    ["10_대금_마일스톤_지급표.hwp", "견적 row 금액"],
+    ["15_견적산정표.hwp", "견적 row 전체"],
+    ["06_변경요청서.hwp", "기준 견적 row"],
   ];
   els.reflectionMap.innerHTML = `<div class="reflection-list">${targets
     .map(
@@ -903,11 +903,6 @@ function escapeXml(value) {
     .replace(/"/g, "&quot;");
 }
 
-function paragraphXml(text, style = "Normal") {
-  const pStyle = style === "Normal" ? "" : `<w:pPr><w:pStyle w:val="${style}"/></w:pPr>`;
-  return `<w:p>${pStyle}<w:r><w:t xml:space="preserve">${escapeXml(text)}</w:t></w:r></w:p>`;
-}
-
 function isMarkdownTableLine(line) {
   return /^\s*\|.*\|\s*$/.test(line);
 }
@@ -923,157 +918,6 @@ function parseMarkdownTableRow(line) {
 
 function isMarkdownSeparator(cells) {
   return cells.every((cell) => /^:?-{3,}:?$/.test(cell.trim()));
-}
-
-function wordTableXml(headers, rows) {
-  const cell = (value, header = false) => {
-    const shading = header ? '<w:shd w:fill="EAF1F8"/>' : "";
-    const bold = header ? "<w:b/>" : "";
-    return `<w:tc><w:tcPr><w:tcW w:w="2200" w:type="dxa"/>${shading}</w:tcPr><w:p><w:r><w:rPr>${bold}</w:rPr><w:t xml:space="preserve">${escapeXml(value)}</w:t></w:r></w:p></w:tc>`;
-  };
-  const headerRow = `<w:tr>${headers.map((item) => cell(item, true)).join("")}</w:tr>`;
-  const bodyRows = rows
-    .map((row) => `<w:tr>${row.map((item) => cell(item)).join("")}</w:tr>`)
-    .join("");
-  return `<w:tbl>
-    <w:tblPr>
-      <w:tblW w:w="0" w:type="auto"/>
-      <w:tblBorders>
-        <w:top w:val="single" w:sz="4" w:color="B7C2D0"/>
-        <w:left w:val="single" w:sz="4" w:color="B7C2D0"/>
-        <w:bottom w:val="single" w:sz="4" w:color="B7C2D0"/>
-        <w:right w:val="single" w:sz="4" w:color="B7C2D0"/>
-        <w:insideH w:val="single" w:sz="4" w:color="B7C2D0"/>
-        <w:insideV w:val="single" w:sz="4" w:color="B7C2D0"/>
-      </w:tblBorders>
-      <w:tblCellMar>
-        <w:top w:w="100" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="100" w:type="dxa"/>
-      </w:tblCellMar>
-    </w:tblPr>
-    ${headerRow}${bodyRows}
-  </w:tbl><w:p/>`;
-}
-
-function markdownToWordParagraphs(markdown) {
-  const lines = markdown.split(/\r?\n/);
-  const paragraphs = [];
-
-  for (let index = 0; index < lines.length; index += 1) {
-    const rawLine = lines[index];
-    const line = rawLine.trimEnd();
-    if (isMarkdownTableLine(line)) {
-      const headers = parseMarkdownTableRow(line);
-      const maybeSeparator = parseMarkdownTableRow(lines[index + 1] || "");
-      if (isMarkdownSeparator(maybeSeparator)) {
-        index += 2;
-        const rows = [];
-        while (index < lines.length && isMarkdownTableLine(lines[index])) {
-          rows.push(parseMarkdownTableRow(lines[index]));
-          index += 1;
-        }
-        index -= 1;
-        paragraphs.push(wordTableXml(headers, rows));
-        continue;
-      }
-    }
-    if (!line.trim()) {
-      paragraphs.push("<w:p/>");
-      continue;
-    }
-    if (line.startsWith("# ")) {
-      paragraphs.push(paragraphXml(line.slice(2), "Title"));
-    } else if (line.startsWith("## ")) {
-      paragraphs.push(paragraphXml(line.slice(3), "Heading1"));
-    } else if (line.startsWith("### ")) {
-      paragraphs.push(paragraphXml(line.slice(4), "Heading2"));
-    } else if (line.startsWith("- ")) {
-      paragraphs.push(paragraphXml(`- ${line.slice(2)}`));
-    } else if (line.startsWith("> ")) {
-      paragraphs.push(paragraphXml(line.slice(2), "Quote"));
-    } else {
-      paragraphs.push(paragraphXml(line));
-    }
-  }
-
-  return paragraphs.join("");
-}
-
-function contentTypesXml() {
-  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
-  <Default Extension="xml" ContentType="application/xml"/>
-  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
-  <Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
-</Types>`;
-}
-
-function rootRelsXml() {
-  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
-</Relationships>`;
-}
-
-function stylesXml() {
-  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-  <w:style w:type="paragraph" w:default="1" w:styleId="Normal">
-    <w:name w:val="Normal"/>
-    <w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="21"/></w:rPr>
-  </w:style>
-  <w:style w:type="paragraph" w:styleId="Title">
-    <w:name w:val="Title"/>
-    <w:basedOn w:val="Normal"/>
-    <w:pPr><w:spacing w:after="260"/></w:pPr>
-    <w:rPr><w:b/><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="34"/></w:rPr>
-  </w:style>
-  <w:style w:type="paragraph" w:styleId="Heading1">
-    <w:name w:val="heading 1"/>
-    <w:basedOn w:val="Normal"/>
-    <w:pPr><w:spacing w:before="260" w:after="140"/></w:pPr>
-    <w:rPr><w:b/><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="27"/></w:rPr>
-  </w:style>
-  <w:style w:type="paragraph" w:styleId="Heading2">
-    <w:name w:val="heading 2"/>
-    <w:basedOn w:val="Normal"/>
-    <w:pPr><w:spacing w:before="200" w:after="100"/></w:pPr>
-    <w:rPr><w:b/><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Malgun Gothic"/><w:sz w:val="23"/></w:rPr>
-  </w:style>
-  <w:style w:type="paragraph" w:styleId="Quote">
-    <w:name w:val="Quote"/>
-    <w:basedOn w:val="Normal"/>
-    <w:pPr><w:ind w:left="360"/><w:spacing w:before="80" w:after="80"/></w:pPr>
-    <w:rPr><w:i/><w:color w:val="5C667A"/></w:rPr>
-  </w:style>
-</w:styles>`;
-}
-
-async function createDocxBlob(markdown) {
-  if (!window.JSZip) {
-    throw new Error("JSZip 로드 실패");
-  }
-  const zip = new window.JSZip();
-  const body = markdownToWordParagraphs(markdown);
-  const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-  <w:body>
-    ${body}
-    <w:sectPr>
-      <w:pgSz w:w="11906" w:h="16838"/>
-      <w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440"/>
-    </w:sectPr>
-  </w:body>
-</w:document>`;
-
-  zip.file("[Content_Types].xml", contentTypesXml());
-  zip.folder("_rels").file(".rels", rootRelsXml());
-  zip.folder("word").file("document.xml", documentXml);
-  zip.folder("word").file("styles.xml", stylesXml());
-  return zip.generateAsync({
-    type: "blob",
-    mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  });
 }
 
 function renderFallbackPreview(target, markdown) {
@@ -1102,36 +946,20 @@ function renderFallbackPreview(target, markdown) {
     else if (!line.trim()) chunks.push("<p></p>");
     else chunks.push(`<p class="${line.startsWith("> ") ? "muted-line" : ""}">${escapeXml(line.replace(/^> /, ""))}</p>`);
   }
-  target.innerHTML = `<article class="docx-fallback-page">${chunks.join("")}</article>`;
+  target.innerHTML = `<article class="document-preview-page">${chunks.join("")}</article>`;
 }
 
-async function renderDocxPreview(target, markdown) {
+function renderDocumentPreview(target, markdown) {
   const token = (previewTokens.get(target) || 0) + 1;
   previewTokens.set(target, token);
-  try {
-    const blob = await createDocxBlob(markdown);
-    if (token !== previewTokens.get(target)) return;
-    target.innerHTML = "";
-    if (window.docx?.renderAsync) {
-      await window.docx.renderAsync(blob, target, null, {
-        breakPages: true,
-        inWrapper: true,
-        ignoreWidth: false,
-        ignoreHeight: false,
-      });
-    } else {
-      renderFallbackPreview(target, markdown);
-    }
-  } catch {
-    if (token === previewTokens.get(target)) renderFallbackPreview(target, markdown);
-  }
+  if (token === previewTokens.get(target)) renderFallbackPreview(target, markdown);
 }
 
 function updateRfp() {
   contractMarkdown = buildContractDraft();
   renderOptionalFiles();
-  renderDocxPreview(els.rfpOutput, contractMarkdown);
-  renderDocxPreview(els.buyerEstimateOutput, buildBuyerEstimateMarkdown());
+  renderDocumentPreview(els.rfpOutput, contractMarkdown);
+  renderDocumentPreview(els.buyerEstimateOutput, buildBuyerEstimateMarkdown());
 }
 
 function buildAgreementMarkdown() {
@@ -1642,10 +1470,10 @@ function optionalAppendixDocuments() {
   const selected = appendixSelections();
   const docs = [];
   if (selected.designUx) {
-    docs.push(["16_선택별첨_디자인_UX_수정범위.docx", buildDesignUxAppendixMarkdown()]);
+    docs.push(["16_선택별첨_디자인_UX_수정범위.hwp", buildDesignUxAppendixMarkdown()]);
   }
   if (selected.revisionCounting) {
-    docs.push(["17_선택별첨_수정횟수_산정표.docx", buildRevisionCountingAppendixMarkdown()]);
+    docs.push(["17_선택별첨_수정횟수_산정표.hwp", buildRevisionCountingAppendixMarkdown()]);
   }
   return docs;
 }
@@ -1727,23 +1555,23 @@ function buildPrivacySecurityMarkdown() {
 function buildDocumentBundle() {
   const meta = projectMeta();
   return [
-    ["02_RFP_과업내용서.docx", buildRfpSpecMarkdown()],
-    ["03_SW_개발용역계약서_초안.docx", contractMarkdown || buildContractDraft()],
-    ["04_검수기준표.docx", buildAcceptanceCriteriaMarkdown()],
-    ["05_수정요청서.docx", buildRevisionRequestMarkdown()],
-    ["06_변경요청서.docx", buildChangeRequestMarkdown()],
-    ["07_회의록_승인서.docx", buildMeetingMinutesMarkdown()],
-    ["08_납품확인서.docx", buildDeliveryConfirmationMarkdown()],
-    ["09_하자신고서.docx", buildDefectReportMarkdown()],
-    ["10_대금_마일스톤_지급표.docx", buildPaymentScheduleMarkdown()],
-    ["11_권리귀속_소스코드_인도목록.docx", buildRightsHandoverMarkdown()],
-    ["12_운영비_API_계정_인수인계서.docx", buildOpsHandoverMarkdown()],
-    ["13_개인정보_보안_요구사항.docx", buildPrivacySecurityMarkdown()],
-    ["14_공급자_수요자_합의표.docx", buildAgreementMarkdown()],
-    ["15_견적산정표.docx", buildEstimateSheetMarkdown()],
+    ["02_RFP_과업내용서.hwp", buildRfpSpecMarkdown()],
+    ["03_SW_개발용역계약서_초안.hwp", contractMarkdown || buildContractDraft()],
+    ["04_검수기준표.hwp", buildAcceptanceCriteriaMarkdown()],
+    ["05_수정요청서.hwp", buildRevisionRequestMarkdown()],
+    ["06_변경요청서.hwp", buildChangeRequestMarkdown()],
+    ["07_회의록_승인서.hwp", buildMeetingMinutesMarkdown()],
+    ["08_납품확인서.hwp", buildDeliveryConfirmationMarkdown()],
+    ["09_하자신고서.hwp", buildDefectReportMarkdown()],
+    ["10_대금_마일스톤_지급표.hwp", buildPaymentScheduleMarkdown()],
+    ["11_권리귀속_소스코드_인도목록.hwp", buildRightsHandoverMarkdown()],
+    ["12_운영비_API_계정_인수인계서.hwp", buildOpsHandoverMarkdown()],
+    ["13_개인정보_보안_요구사항.hwp", buildPrivacySecurityMarkdown()],
+    ["14_공급자_수요자_합의표.hwp", buildAgreementMarkdown()],
+    ["15_견적산정표.hwp", buildEstimateSheetMarkdown()],
     ...optionalAppendixDocuments(),
     [
-      "00_참고문헌.docx",
+      "00_참고문헌.hwp",
       `# ${meta.projectName} 참고문헌
 
 ${legalReferences.map((ref) => `## ${ref.title}\n\n- 용도: ${ref.note}\n- 링크: ${ref.url}`).join("\n\n")}
@@ -1840,7 +1668,7 @@ function updateRisk() {
 
 계약서 본문을 붙여넣으면 계약 입력 점검 결과가 생성됩니다.
 `;
-    renderDocxPreview(els.riskOutput, riskMarkdown);
+    renderDocumentPreview(els.riskOutput, riskMarkdown);
     return;
   }
 
@@ -1874,7 +1702,7 @@ function updateRisk() {
   }
 
   riskMarkdown = buildRiskMarkdown(results, score);
-  renderDocxPreview(els.riskOutput, riskMarkdown);
+  renderDocumentPreview(els.riskOutput, riskMarkdown);
 }
 
 function saveBlob(filename, blob) {
@@ -1886,8 +1714,12 @@ function saveBlob(filename, blob) {
   URL.revokeObjectURL(url);
 }
 
-async function downloadDocx(filename, markdown) {
-  const blob = await createDocxBlob(markdown);
+function markdownSourceName(filename) {
+  return filename.replace(/\.hwp$/u, ".md");
+}
+
+function downloadMarkdown(filename, markdown) {
+  const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
   saveBlob(filename, blob);
 }
 
@@ -1898,13 +1730,16 @@ async function downloadBundleZip() {
   const documents = buildDocumentBundle();
 
   for (const [filename, markdown] of documents) {
-    zip.file(filename, await createDocxBlob(markdown));
+    zip.file(markdownSourceName(filename), markdown);
   }
 
   zip.file(
     "README.txt",
     [
       "scopeguard-kr SW 외주개발계약 계약문서 패키지",
+      "",
+      "브라우저에서 받은 파일은 초안 텍스트입니다.",
+      "변호사 전달용 HWP/XLSX는 npm run build:docs로 생성하세요.",
       "",
       "이 패키지는 법률 자문이나 공증을 대체하지 않습니다.",
       "목적은 계약 전 과업 범위, 검수 기준, 수정/변경요청 기준을 계약 조항과 부속서류에 반영하는 것입니다.",
@@ -1992,21 +1827,21 @@ function wireEvents() {
   });
 
   els.downloadBundle.addEventListener("click", async () => {
-    trackEvent("docx_bundle_downloaded", { rowCount: estimateRows.length });
+    trackEvent("draft_text_bundle_downloaded", { rowCount: estimateRows.length });
     await downloadBundleZip();
   });
 
   els.downloadContract.addEventListener("click", async () => {
-    trackEvent("contract_docx_downloaded", { rowCount: estimateRows.length });
-    await downloadDocx("03_SW_개발용역계약서_초안.docx", contractMarkdown || buildContractDraft());
+    trackEvent("contract_text_downloaded", { rowCount: estimateRows.length });
+    downloadMarkdown("03_SW_개발용역계약서_초안.md", contractMarkdown || buildContractDraft());
   });
 
   els.downloadAgreement.addEventListener("click", async () => {
-    await downloadDocx("14_공급자_수요자_합의표.docx", buildAgreementMarkdown());
+    downloadMarkdown("14_공급자_수요자_합의표.md", buildAgreementMarkdown());
   });
 
   els.downloadRisk.addEventListener("click", async () => {
-    await downloadDocx("web_계약리스크리포트.docx", buildEffectiveRiskMarkdown());
+    downloadMarkdown("web_계약리스크리포트.md", buildEffectiveRiskMarkdown());
   });
 
   els.addEstimateRow.addEventListener("click", addEstimateRow);

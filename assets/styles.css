@@ -693,7 +693,7 @@ button.ghost {
   padding: 18px;
 }
 
-.docx-preview-shell {
+.document-preview-shell {
   overflow: auto;
   display: grid;
   justify-content: center;
@@ -705,7 +705,7 @@ button.ghost {
   padding: 18px;
 }
 
-.docx-fallback-page {
+.document-preview-page {
   width: min(100%, 794px);
   min-height: 1123px;
   background: #fff;
@@ -714,64 +714,64 @@ button.ghost {
   padding: 72px 76px;
 }
 
-.docx-fallback-page h1,
-.docx-fallback-page h2,
-.docx-fallback-page h3,
-.docx-fallback-page p {
+.document-preview-page h1,
+.document-preview-page h2,
+.document-preview-page h3,
+.document-preview-page p {
   margin: 0 0 11px;
 }
 
-.docx-fallback-page h1 {
+.document-preview-page h1 {
   font-size: 25px;
   line-height: 1.25;
 }
 
-.docx-fallback-page h2 {
+.document-preview-page h2 {
   margin-top: 22px;
   font-size: 18px;
 }
 
-.docx-fallback-page h3 {
+.document-preview-page h3 {
   margin-top: 16px;
   font-size: 15px;
 }
 
-.docx-fallback-page p {
+.document-preview-page p {
   color: #263245;
   font-size: 13px;
   line-height: 1.75;
 }
 
-.docx-fallback-page .muted-line {
+.document-preview-page .muted-line {
   color: #667085;
 }
 
-.docx-fallback-page table {
+.document-preview-page table {
   width: 100%;
   margin: 12px 0 18px;
   border-collapse: collapse;
   font-size: 11px;
 }
 
-.docx-fallback-page th,
-.docx-fallback-page td {
+.document-preview-page th,
+.document-preview-page td {
   border: 1px solid #cfd7e3;
   padding: 6px;
   text-align: left;
   vertical-align: top;
 }
 
-.docx-fallback-page th {
+.document-preview-page th {
   background: #edf2f7;
   color: #1f3b5c;
 }
 
-.docx-wrapper {
+.document-wrapper {
   background: transparent !important;
   padding: 0 !important;
 }
 
-.docx-wrapper > section.docx {
+.document-wrapper > section.document {
   box-shadow: 0 10px 28px rgba(23, 32, 51, 0.14) !important;
 }
 

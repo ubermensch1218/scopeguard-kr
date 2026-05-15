@@ -12,7 +12,7 @@ export function build(ctx) {
         ["디자인/UX 변경 분류", "선택 별첨을 포함한 경우에만 계약 기준으로 적용"],
       ];
   return {
-    file: "04_검수기준표.docx",
+    file: "04_검수기준표.hwp",
     title: `${ctx.projectName} 검수기준표`,
     blocks: [
       table(["ID", "분류", "기능", "검수 기준", "상태", "판정"], (input.requirements || []).map((req) => [
