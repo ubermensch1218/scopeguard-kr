@@ -12,6 +12,10 @@ coverage/
 
 # Generated document package
 output/
+output_kordoc/
+
+# Local npm pack tarballs (PoC backend testing)
+*.tgz
 
 # Local environment and deployment state
 .env
