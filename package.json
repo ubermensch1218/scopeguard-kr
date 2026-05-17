@@ -8,6 +8,7 @@
     "check": "node scripts/check-data.mjs",
     "build:docs": "node scripts/build-hwp-package.mjs",
     "build:lawyer:hwp": "node scripts/build-rhwp-lawyer-package.mjs",
+    "audit:boundary": "node scripts/audit-publish.mjs --boundary-only",
     "audit:publish": "node scripts/audit-publish.mjs"
   },
   "keywords": [

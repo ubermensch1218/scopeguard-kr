@@ -30,10 +30,10 @@ What contract-writing, input, generator, or documentation problem does this PR s
 ## Verification
 
 - [ ] `npm run check`
-- [ ] `npm run audit:publish`
+- [ ] `npm run audit:boundary`
+- [ ] `npm run audit:publish` was run when generated HWP/XLSX output changed and `rhwp` was available.
 - [ ] Generated HWP files were inspected when document wording changed.
 
 ## Notes For Reviewers
 
 What should reviewers focus on?
-
