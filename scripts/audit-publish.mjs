@@ -13,6 +13,7 @@ const root = path.resolve(new URL("..", import.meta.url).pathname);
 const outDir = path.join(root, "output");
 const generatedDir = path.join(outDir, fullArchiveDirName);
 const selfPath = path.relative(root, new URL(import.meta.url).pathname);
+const boundaryOnly = process.argv.includes("--boundary-only");
 
 const join = (...parts) => parts.join("");
 const char = (...codes) => String.fromCharCode(...codes);
@@ -625,7 +626,11 @@ function main() {
   checkSkillProof();
   checkDocumentModules();
   checkSourceText();
-  for (const sample of samples) buildSample(sample);
+  if (boundaryOnly) {
+    pass("generated hwp audit skipped for boundary-only mode");
+  } else {
+    for (const sample of samples) buildSample(sample);
+  }
   checkIgnoreBoundary();
 
   console.log(`\n${ok.length} checks passed`);

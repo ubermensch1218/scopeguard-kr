@@ -5,14 +5,43 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  publish-audit:
-    name: Publish boundary and HWP audit
+  boundary-audit:
+    name: Publish boundary audit
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Check required files
+        run: npm run check
+
+      - name: Audit publish boundary
+        run: npm run audit:boundary
+
+      - name: Confirm generated docs stay untracked
+        run: |
+          if git ls-files --error-unmatch output >/dev/null 2>&1; then
+            echo "output/ must not be tracked"
+            exit 1
+          fi
+
+  full-hwp-audit:
+    name: Full HWP package audit
+    runs-on: ubuntu-latest
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && vars.RHWP_REPO != ''
+    env:
+      RHWP_REPO: ${{ vars.RHWP_REPO }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -28,7 +57,7 @@ jobs:
       - name: Check required files
         run: npm run check
 
-      - name: Audit publish boundary
+      - name: Audit generated HWP package
         run: npm run audit:publish
 
       - name: Confirm generated docs stay untracked
