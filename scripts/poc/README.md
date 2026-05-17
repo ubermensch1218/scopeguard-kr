@@ -15,7 +15,7 @@
 | `cargo run` 매 실행 | 수 초 |
 
 대안으로 **[kordoc](https://www.npmjs.com/package/kordoc)** (HWP/HWPX/PDF/XLSX/DOCX 파서·생성기, MIT)을 사용하면
-`npm i kordoc` 한 줄로 끝나고, 출력은 `.hwp` 대신 `.hwpx`(한컴오피스 권장 표준 포맷, 동일 호환)가 됩니다.
+`npm i kordoc` 한 줄로 끝나고, 출력은 `.hwp` 대신 `.hwpx`(한컴오피스 2010+ 권장 패키지 포맷, 동일 호환)가 됩니다.
 
 ## 결과
 
@@ -31,7 +31,18 @@ created 20 hwpx files in output_kordoc/ (33ms)
 | `verify-signature.mjs` | HWPX 시그니처 (mimetype STORE, `application/hwp+zip`) | 20/20 |
 | `verify-roundtrip.mjs` | `kordoc.parseHwpx` 역파싱 + 제목 보존 | 20/20 |
 | `verify-theme.mjs` | rhwp와 동일한 색상 팔레트가 `header.xml`에 등장 | 20/20 |
-| `verify-theme.mjs` | 표 첫 행이 헤더 charPr 사용 (`charPrIDRef=9`) | 20/20 |
+| `verify-theme.mjs` | 표가 있는 문서의 첫 행이 헤더 charPr 사용 (`charPrIDRef=9`) | 20/20 |
+
+verifier 셋 모두 `buildDocuments(input)`으로 기대 파일 목록을 만들고
+디스크 파일과 대조 — `missing/unexpected/0개` 시 실패 (exit 1) 처리한다.
+즉 `output_kordoc/`가 비어 있거나 일부 파일만 있어도 verifier가 통과
+하지 않는다 (false-positive 가드).
+
+| 입력 샘플 | 기대 .hwpx 수 |
+|---|---|
+| `data/contract-input.sample.json` | 20 |
+| `data/contract-input.design.sample.json` | 20 |
+| `data/contract-input.ops.sample.json` | 18 |
 
 ## 사용
 
